@@ -2,6 +2,8 @@ package com.solidparts.gifts.dao;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.solidparts.gifts.dto.UserDTO;
+
 import java.util.List;
 
 /**

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class OnlineUserDAO {
     private final NetworkDAO networkDAO;
-    private final OfflineItemDAO offlineItemDAO;
+    private final OfflineGDAO offlineItemDAO;
     private final Context context;
 
     public OnlineItemDAO(Context context) {

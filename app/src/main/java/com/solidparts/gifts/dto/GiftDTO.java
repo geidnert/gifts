@@ -7,30 +7,17 @@ import java.util.Arrays;
  */
 public class GiftDTO {
     private long cacheID;
-    double longitude;
-    double latitude;
     int onlineid;
-    int count;
     String name;
     String description;
-    String location;
-    byte[] image;
-    byte[] qrCode;
+    boolean bought;
 
-    public double getLatitude() {
-        return latitude;
+    public long getCacheID() {
+        return cacheID;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setCacheID(long cacheID) {
+        this.cacheID = cacheID;
     }
 
     public int getOnlineid() {
@@ -39,14 +26,6 @@ public class GiftDTO {
 
     public void setOnlineid(int onlineid) {
         this.onlineid = onlineid;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 
     public String getName() {
@@ -65,74 +44,38 @@ public class GiftDTO {
         this.description = description;
     }
 
-    public byte[] getImage() {
-        return image;
+    public boolean isBought() {
+        return bought;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setBought(boolean bought) {
+        this.bought = bought;
     }
-
-    public byte[] getQrCode() {
-        return qrCode;
-    }
-
-    public void setQrCode(byte[] qrCode) {
-        this.qrCode = qrCode;
-    }
-
-    public long getCacheID() {
-        return cacheID;
-    }
-
-    public void setCacheID(long cacheID) {
-        this.cacheID = cacheID;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ItemDTO itemDTO = (ItemDTO) o;
+        GiftDTO giftDTO = (GiftDTO) o;
 
-        if (name != null ? !name.equals(itemDTO.name) : itemDTO.name != null) return false;
-        if (description != null ? !description.equals(itemDTO.description) : itemDTO.description != null)
-            return false;
-        return !(location != null ? !location.equals(itemDTO.location) : itemDTO.location != null);
+        return onlineid == giftDTO.onlineid;
 
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (location != null ? location.hashCode() : 0);
-        return result;
+        return onlineid;
     }
 
     @Override
     public String toString() {
-        return "ItemDTO{" +
+        return "GiftDTO{" +
                 "cacheID=" + cacheID +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
                 ", onlineid=" + onlineid +
-                ", count=" + count +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", location='" + location + '\'' +
-                ", image=" + Arrays.toString(image) +
-                ", qrCode=" + Arrays.toString(qrCode) +
+                ", bought=" + bought +
                 '}';
     }
 }

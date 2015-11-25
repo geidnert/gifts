@@ -4,6 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import com.solidparts.gifts.dto.DataDTO;
+import com.solidparts.gifts.dto.GiftDTO;
 
 import org.json.JSONException;
 
@@ -14,7 +18,7 @@ import java.util.List;
 /**
  * Created by geidnert on 25/11/15.
  */
-public class OfflineGiftDAO {
+public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
     public static final String ITEM = "item";
     public static final String CACHE_ID = "cache_id";
     public static final String NAME = "name";
@@ -28,8 +32,8 @@ public class OfflineGiftDAO {
     public static final String LONGITUDE = "longitude";
     public static final String LATITUDE = "latitude";
 
-    public OfflineItemDAO(Context context) {
-        super(context, "warehouse.db", null, 3);
+    public OfflineGiftDAO(Context context) {
+        super(context, "gifts.db", null, 3);
     }
 
     @Override
@@ -60,7 +64,7 @@ public class OfflineGiftDAO {
     }
 
     @Override
-    public List<ItemDTO> getItems(String searchTerm, int searchType) throws IOException, JSONException {
+    public List<GiftDTO> getGiftss(String searchTerm, int searchType) throws IOException, JSONException {
 
         String query = "Select * FROM " + ITEM + " WHERE " + NAME + " LIKE  \"%" + searchTerm + "%\"" + " OR " + LOCATION + " LIKE \"%" + searchTerm + "%\" AND " + SYNCED + " < 2";
 
@@ -68,45 +72,45 @@ public class OfflineGiftDAO {
         if (searchType == ALL) {
             query = "Select * FROM " + ITEM;
         }
-        List<ItemDTO> searchResultList = getItemDTOs(query);
+        List<GiftDTO> searchResultList = getGiftDTOs(query);
         return searchResultList;
     }
 
-    public List<ItemDTO> getNotSyncedAddedItems() throws Exception {
+    public List<GiftDTO> getNotSyncedAddedGifts() throws Exception {
         String query = "Select * FROM " + ITEM + " WHERE " + SYNCED + " = 0";
-        List<ItemDTO> searchResultList = getItemDTOs(query);
+        List<GiftDTO> searchResultList = getGiftDTOs(query);
         return searchResultList;
     }
 
-    public List<ItemDTO> getNotSyncedRemovedItems() throws Exception {
+    public List<GiftDTO> getNotSyncedRemovedGifts() throws Exception {
         String query = "Select * FROM " + ITEM + " WHERE " + SYNCED + " = 2";
-        List<ItemDTO> searchResultList = getItemDTOs(query);
+        List<GiftDTO> searchResultList = getGiftDTOs(query);
         return searchResultList;
     }
 
-    private List<ItemDTO> getItemDTOs(String query) {
+    private List<GiftDTO> getGiftDTOs(String query) {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
-        List<ItemDTO> searchResultList = new ArrayList<>();
+        List<GiftDTO> searchResultList = new ArrayList<>();
         cursor.moveToFirst();
 
         while (cursor.isAfterLast() == false) {
-            ItemDTO itemDto = new ItemDTO();
+            GiftDTO giftDTO = new GiftDTO();
 
-            itemDto.setCacheID(cursor.getInt(0));
-            itemDto.setOnlineid(cursor.getInt(1));
-            itemDto.setName(cursor.getString(2));
-            itemDto.setDescription(cursor.getString(3));
-            itemDto.setCount(cursor.getInt(4));
-            itemDto.setImage(cursor.getBlob(5));
-            itemDto.setQrCode(cursor.getBlob(6));
-            itemDto.setLocation(cursor.getString(7));
-            itemDto.setLongitude(cursor.getDouble(9));
-            itemDto.setLatitude(cursor.getDouble(10));
+            giftDTO.setCacheID(cursor.getInt(0));
+            giftDTO.setOnlineid(cursor.getInt(1));
+            giftDTO.setName(cursor.getString(2));
+            giftDTO.setDescription(cursor.getString(3));
+            giftDTO.setCount(cursor.getInt(4));
+            giftDTO.setImage(cursor.getBlob(5));
+            giftDTO.setQrCode(cursor.getBlob(6));
+            giftDTO.setLocation(cursor.getString(7));
+            giftDTO.setLongitude(cursor.getDouble(9));
+            giftDTO.setLatitude(cursor.getDouble(10));
 
 
 
-            searchResultList.add(itemDto);
+            searchResultList.add(giftDTO);
             cursor.moveToNext();
         }
 
@@ -115,7 +119,7 @@ public class OfflineGiftDAO {
     }
 
     @Override
-    public void addItem(ItemDTO itemDTO, int sync) throws IOException, JSONException {
+    public void addItem(GiftDTO itemDTO, int sync) throws IOException, JSONException {
         ContentValues cv = new ContentValues();
 
         cv.put(ONLINEID, itemDTO.getOnlineid());
@@ -134,31 +138,31 @@ public class OfflineGiftDAO {
     }
 
     @Override
-    public void updateItem(ItemDTO itemDTO, int sync) {
-        System.out.println("values: " + itemDTO.toString());
+    public void updateGift(GiftDTO giftDTODTO, int sync) {
+        System.out.println("values: " + giftDTODTO.toString());
         ContentValues cv = new ContentValues();
 
-        cv.put(ONLINEID, itemDTO.getOnlineid());
-        cv.put(NAME, itemDTO.getName());
-        cv.put(DESCRIPTION, itemDTO.getDescription());
-        cv.put(COUNT, itemDTO.getCount());
-        cv.put(LOCATION, itemDTO.getLocation());
-        cv.put(IMAGE, itemDTO.getImage());
-        cv.put(QRCODE, itemDTO.getQrCode());
+        cv.put(ONLINEID, giftDTODTO.getOnlineid());
+        cv.put(NAME, giftDTODTO.getName());
+        cv.put(DESCRIPTION, giftDTODTO.getDescription());
+        cv.put(COUNT, giftDTODTO.getCount());
+        cv.put(LOCATION, giftDTODTO.getLocation());
+        cv.put(IMAGE, giftDTODTO.getImage());
+        cv.put(QRCODE, giftDTODTO.getQrCode());
         cv.put(SYNCED, sync);
-        cv.put(LONGITUDE, itemDTO.getLongitude());
-        cv.put(LATITUDE, itemDTO.getLatitude());
+        cv.put(LONGITUDE, giftDTODTO.getLongitude());
+        cv.put(LATITUDE, giftDTODTO.getLatitude());
 
         String where = "onlineid=?";
 
-        String[] whereArgs = {Long.toString(itemDTO.getOnlineid())};
+        String[] whereArgs = {Long.toString(giftDTODTO.getOnlineid())};
         SQLiteDatabase db = this.getWritableDatabase();
         db.update(ITEM, cv, where, whereArgs);
 
     }
 
     @Override
-    public void removeItemByOnlineId(int onlineId) throws Exception {
+    public void removeGiftByOnlineId(int onlineId) throws Exception {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ITEM, ONLINEID + "=" + onlineId, null);
@@ -166,7 +170,7 @@ public class OfflineGiftDAO {
     }
 
     @Override
-    public void removeItemByCacheId(long cacheId) throws Exception {
+    public void removeGiftByCacheId(long cacheId) throws Exception {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ITEM, CACHE_ID + "=" + cacheId, null);

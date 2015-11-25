@@ -2,6 +2,8 @@ package com.solidparts.gifts.dao;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.solidparts.gifts.dto.GiftDTO;
+
 import java.util.List;
 
 /**
@@ -24,7 +26,7 @@ public interface IGiftDAO {
 
     public void updateGift(GiftDTO giftDTO, int sync) throws Exception;
 
-    public void removeGiftByGiftId(int giftIdId) throws Exception;
+    public void removeGiftByOnlineId(int onlineId) throws Exception;
 
     public void removeGiftByCacheId(long cacheId) throws Exception;
 
