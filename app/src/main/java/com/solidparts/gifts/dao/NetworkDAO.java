@@ -15,7 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by geidnert on 25/11/15.
  */
-public class NetworkDAO {
+public class NetworkDAO implements INetworkDAO{
     public static final String ADD = "add.php";
     public static final String UPDATE = "update.php";
     public static final String REMOVE = "remove.php";
@@ -24,7 +24,7 @@ public class NetworkDAO {
     public static final String DATABASE_DEV = "gifts_dev";
     public static final String DATABASE_LIVE = "gifts";
 
-    private static final String URL = "http://solidparts.se/warehouse/";
+    private static final String URL = "http://solidparts.se/gifts/";
 
     @Override
     public String request(String action, ArrayList<NameValuePair> nameValuePairs) throws IOException {

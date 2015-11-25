@@ -18,8 +18,6 @@ public interface IGiftDAO {
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 
-    public GiftDTO getAppData() throws Exception;
-
     public List<GiftDTO> getGifts(String searchTerm, int searchType) throws Exception;
 
     public void addGift(GiftDTO giftDTO, int sync) throws Exception;

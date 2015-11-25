@@ -18,8 +18,6 @@ public interface IUserDAO {
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
 
-    public UserDTO getAppData() throws Exception;
-
     public List<UserDTO> getUsers(String searchTerm, int searchType) throws Exception;
 
     public void addUser(UserDTO userDTO, int sync) throws Exception;

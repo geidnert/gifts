@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.solidparts.gifts.dto.DataDTO;
 import com.solidparts.gifts.dto.GiftDTO;
 
 import org.json.JSONException;
@@ -59,12 +58,7 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
     }
 
     @Override
-    public DataDTO getAppData() throws Exception {
-        return null;
-    }
-
-    @Override
-    public List<GiftDTO> getGiftss(String searchTerm, int searchType) throws IOException, JSONException {
+    public List<GiftDTO> getGifts(String searchTerm, int searchType) throws IOException, JSONException {
 
         String query = "Select * FROM " + ITEM + " WHERE " + NAME + " LIKE  \"%" + searchTerm + "%\"" + " OR " + LOCATION + " LIKE \"%" + searchTerm + "%\" AND " + SYNCED + " < 2";
 
@@ -98,17 +92,9 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
             GiftDTO giftDTO = new GiftDTO();
 
             giftDTO.setCacheID(cursor.getInt(0));
-            giftDTO.setOnlineid(cursor.getInt(1));
+            giftDTO.setId(cursor.getInt(1));
             giftDTO.setName(cursor.getString(2));
             giftDTO.setDescription(cursor.getString(3));
-            giftDTO.setCount(cursor.getInt(4));
-            giftDTO.setImage(cursor.getBlob(5));
-            giftDTO.setQrCode(cursor.getBlob(6));
-            giftDTO.setLocation(cursor.getString(7));
-            giftDTO.setLongitude(cursor.getDouble(9));
-            giftDTO.setLatitude(cursor.getDouble(10));
-
-
 
             searchResultList.add(giftDTO);
             cursor.moveToNext();
@@ -119,19 +105,12 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
     }
 
     @Override
-    public void addItem(GiftDTO itemDTO, int sync) throws IOException, JSONException {
+    public void addGift(GiftDTO itemDTO, int sync) throws IOException, JSONException {
         ContentValues cv = new ContentValues();
 
-        cv.put(ONLINEID, itemDTO.getOnlineid());
+        cv.put(ONLINEID, itemDTO.getId());
         cv.put(NAME, itemDTO.getName());
         cv.put(DESCRIPTION, itemDTO.getDescription());
-        cv.put(COUNT, itemDTO.getCount());
-        cv.put(LOCATION, itemDTO.getLocation());
-        cv.put(IMAGE, itemDTO.getImage());
-        cv.put(QRCODE, itemDTO.getQrCode());
-        cv.put(SYNCED, sync);
-        cv.put(LONGITUDE, itemDTO.getLongitude());
-        cv.put(LATITUDE, itemDTO.getLatitude());
 
         long cachceId = getWritableDatabase().insert(ITEM, null, cv);
         itemDTO.setCacheID(cachceId);
@@ -142,20 +121,13 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
         System.out.println("values: " + giftDTODTO.toString());
         ContentValues cv = new ContentValues();
 
-        cv.put(ONLINEID, giftDTODTO.getOnlineid());
+        cv.put(ONLINEID, giftDTODTO.getId());
         cv.put(NAME, giftDTODTO.getName());
         cv.put(DESCRIPTION, giftDTODTO.getDescription());
-        cv.put(COUNT, giftDTODTO.getCount());
-        cv.put(LOCATION, giftDTODTO.getLocation());
-        cv.put(IMAGE, giftDTODTO.getImage());
-        cv.put(QRCODE, giftDTODTO.getQrCode());
-        cv.put(SYNCED, sync);
-        cv.put(LONGITUDE, giftDTODTO.getLongitude());
-        cv.put(LATITUDE, giftDTODTO.getLatitude());
 
         String where = "onlineid=?";
 
-        String[] whereArgs = {Long.toString(giftDTODTO.getOnlineid())};
+        String[] whereArgs = {Long.toString(giftDTODTO.getId())};
         SQLiteDatabase db = this.getWritableDatabase();
         db.update(ITEM, cv, where, whereArgs);
 

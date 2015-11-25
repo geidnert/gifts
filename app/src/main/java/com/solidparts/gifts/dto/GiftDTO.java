@@ -1,13 +1,11 @@
 package com.solidparts.gifts.dto;
 
-import java.util.Arrays;
-
 /**
  * Created by geidnert on 25/11/15.
  */
 public class GiftDTO {
     private long cacheID;
-    int onlineid;
+    int id;
     String name;
     String description;
     boolean bought;
@@ -20,12 +18,12 @@ public class GiftDTO {
         this.cacheID = cacheID;
     }
 
-    public int getOnlineid() {
-        return onlineid;
+    public int getId() {
+        return id;
     }
 
-    public void setOnlineid(int onlineid) {
-        this.onlineid = onlineid;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -59,20 +57,20 @@ public class GiftDTO {
 
         GiftDTO giftDTO = (GiftDTO) o;
 
-        return onlineid == giftDTO.onlineid;
+        return id == giftDTO.id;
 
     }
 
     @Override
     public int hashCode() {
-        return onlineid;
+        return id;
     }
 
     @Override
     public String toString() {
         return "GiftDTO{" +
                 "cacheID=" + cacheID +
-                ", onlineid=" + onlineid +
+                ", id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", bought=" + bought +
