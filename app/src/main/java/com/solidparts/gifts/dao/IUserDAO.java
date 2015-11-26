@@ -2,6 +2,7 @@ package com.solidparts.gifts.dao;
 
 import android.database.sqlite.SQLiteDatabase;
 
+import com.solidparts.gifts.dto.DataDTO;
 import com.solidparts.gifts.dto.UserDTO;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface IUserDAO {
     public void onCreate(SQLiteDatabase db);
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion);
+
+    public DataDTO getAppData() throws Exception;
 
     public List<UserDTO> getUsers(String searchTerm, int searchType) throws Exception;
 
