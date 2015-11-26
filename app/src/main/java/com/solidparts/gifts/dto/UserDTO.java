@@ -9,6 +9,7 @@ public class UserDTO {
     String email;
     String firstname;
     String lastname;
+    String group;
 
     public long getCacheID() {
         return cacheID;
@@ -50,6 +51,14 @@ public class UserDTO {
         this.lastname = lastname;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -74,6 +83,7 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
+                ", group='" + group + '\'' +
                 '}';
     }
 }

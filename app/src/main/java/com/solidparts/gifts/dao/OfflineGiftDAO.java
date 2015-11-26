@@ -134,7 +134,7 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
     }
 
     @Override
-    public void removeGiftByOnlineId(int onlineId) throws Exception {
+    public void removeGiftById(int onlineId) throws Exception {
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ITEM, ONLINEID + "=" + onlineId, null);

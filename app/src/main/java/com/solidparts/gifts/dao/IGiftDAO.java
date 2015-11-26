@@ -24,7 +24,7 @@ public interface IGiftDAO {
 
     public void updateGift(GiftDTO giftDTO, int sync) throws Exception;
 
-    public void removeGiftByOnlineId(int onlineId) throws Exception;
+    public void removeGiftById(int onlineId) throws Exception;
 
     public void removeGiftByCacheId(long cacheId) throws Exception;
 

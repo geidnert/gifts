@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Base64;
 
+import com.solidparts.gifts.dto.UserDTO;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -17,14 +19,14 @@ import java.util.List;
 /**
  * Created by geidnert on 25/11/15.
  */
-public class OnlineUserDAO {
+public class OnlineUserDAO implements IUserDAO {
     private final NetworkDAO networkDAO;
-    private final OfflineGDAO offlineItemDAO;
+    private final OfflineUserDAO offlineUserDAO;
     private final Context context;
 
-    public OnlineItemDAO(Context context) {
+    public OnlineUserDAO(Context context) {
         networkDAO = new NetworkDAO();
-        offlineItemDAO = new OfflineItemDAO(context);
+        offlineUserDAO = new OfflineUserDAO(context);
         this.context = context;
     }
 
@@ -39,7 +41,7 @@ public class OnlineUserDAO {
 
     }
 
-    @Override
+    /*@Override
     public DataDTO getAppData() throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         String request = networkDAO.request(NetworkDAO.APP_DATA, nameValuePairs);
@@ -50,118 +52,106 @@ public class OnlineUserDAO {
         dataDTO.setLatestAppVersion(appVersion);
 
         return dataDTO;
-    }
+    }*/
 
     @Override
-    public List<ItemDTO> getItems(String searchTerm, int searchType) throws IOException, JSONException {
+    public List<UserDTO> getUsers(String searchTerm, int searchType) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("searchterm", searchTerm));
 
         String request = networkDAO.request(NetworkDAO.SEARCH, nameValuePairs);
 
-        List<ItemDTO> allItems = new ArrayList<ItemDTO>();
+        List<UserDTO> allUsers = new ArrayList<UserDTO>();
         JSONObject root = new JSONObject(request);
-        JSONArray items = root.getJSONArray("items");
+        JSONArray items = root.getJSONArray("users");
 
         for (int i = 0; i < items.length(); i++) {
-            JSONObject jsonItem = items.getJSONObject(i).getJSONObject("item");
+            JSONObject jsonUser = items.getJSONObject(i).getJSONObject("user");
 
-            int id = jsonItem.getInt("id");
-            int count = jsonItem.getInt("count");
-            String name = jsonItem.getString("name");
-            String description = jsonItem.getString("description");
-            String location = jsonItem.getString("location");
-            double longitude = jsonItem.getDouble("longitude");
-            double latitude = jsonItem.getDouble("latitude");
+            int id = jsonUser.getInt("id");
+            String firstname = jsonUser.getString("firstname");
+            String lastname = jsonUser.getString("lastname");
+            String email = jsonUser.getString("email");
+            String group = jsonUser.getString("group");
 
-            byte[] image = Base64.decode(jsonItem.get("image").toString(), Base64.DEFAULT);
-            byte[] qrCode = Base64.decode(jsonItem.get("qrcode").toString(), Base64.DEFAULT);
 
-            ItemDTO itemDTO = new ItemDTO();
-            itemDTO.setOnlineid(id);
-            itemDTO.setCount(count);
-            itemDTO.setName(name);
-            itemDTO.setDescription(description);
-            itemDTO.setLocation(location);
-            itemDTO.setImage(image);
-            itemDTO.setQrCode(qrCode);
-            itemDTO.setLongitude(longitude);
-            itemDTO.setLatitude(latitude);
+            //byte[] image = Base64.decode(jsonUser.get("image").toString(), Base64.DEFAULT);
 
-            allItems.add(itemDTO);
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(id);
+            userDTO.setEmail(email);
+            userDTO.setFirstname(firstname);
+            userDTO.setLastname(lastname);
+            userDTO.setGroup(group);
+
+            allUsers.add(userDTO);
         }
 
-        return allItems;
+        return allUsers;
     }
 
     @Override
-    public void addItem(ItemDTO itemDTO, int sync) throws IOException, JSONException {
+    public void addUser(UserDTO userDTO, int sync) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("name", itemDTO.getName()));
-        nameValuePairs.add(new BasicNameValuePair("description", itemDTO.getDescription()));
-        nameValuePairs.add(new BasicNameValuePair("count", itemDTO.getCount() + ""));
-        nameValuePairs.add(new BasicNameValuePair("location", itemDTO.getLocation()));
-        nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(itemDTO.getImage(), Base64.DEFAULT)));
-        nameValuePairs.add(new BasicNameValuePair("qrcode", Base64.encodeToString(itemDTO.getQrCode(), Base64.DEFAULT)));
-        nameValuePairs.add(new BasicNameValuePair("longitude", itemDTO.getLongitude() + ""));
-        nameValuePairs.add(new BasicNameValuePair("latitude", itemDTO.getLatitude() + ""));
+        nameValuePairs.add(new BasicNameValuePair("email", userDTO.getEmail()));
+        nameValuePairs.add(new BasicNameValuePair("firstname", userDTO.getFirstname()));
+        nameValuePairs.add(new BasicNameValuePair("lastname", userDTO.getLastname() + ""));
+        nameValuePairs.add(new BasicNameValuePair("group", userDTO.getGroup()));
+        //nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(userDTO.getImage(), Base64.DEFAULT)));
 
         String request = networkDAO.request(NetworkDAO.ADD, nameValuePairs);
 
-        itemDTO.setOnlineid(Integer.parseInt(request.trim()));
-        offlineItemDAO.updateItem(itemDTO, sync);
+        userDTO.setId(Integer.parseInt(request.trim()));
+        offlineUserDAO.updateUser(userDTO, sync);
 
         // Also save to local database if its not a sync operation
         if (sync == 0) {
-            offlineItemDAO.addItem(itemDTO, 1);
+            offlineUserDAO.addUser(userDTO, 1);
         }
 
     }
 
     @Override
-    public void updateItem(ItemDTO itemDTO, int sync) throws IOException, JSONException {
+    public void updateUser(UserDTO userDTO, int sync) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("onlineid", itemDTO.getOnlineid() + ""));
-        nameValuePairs.add(new BasicNameValuePair("name", itemDTO.getName()));
-        nameValuePairs.add(new BasicNameValuePair("description", itemDTO.getDescription()));
-        nameValuePairs.add(new BasicNameValuePair("count", itemDTO.getCount() + ""));
-        nameValuePairs.add(new BasicNameValuePair("location", itemDTO.getLocation()));
-        nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(itemDTO.getImage(), Base64.DEFAULT)));
-        nameValuePairs.add(new BasicNameValuePair("qrcode", Base64.encodeToString(itemDTO.getQrCode(), Base64.DEFAULT)));
-        nameValuePairs.add(new BasicNameValuePair("longitude", itemDTO.getLongitude() + ""));
-        nameValuePairs.add(new BasicNameValuePair("latitude", itemDTO.getLatitude() + ""));
+        nameValuePairs.add(new BasicNameValuePair("email", userDTO.getEmail()));
+        nameValuePairs.add(new BasicNameValuePair("firstname", userDTO.getFirstname()));
+        nameValuePairs.add(new BasicNameValuePair("lastname", userDTO.getLastname() + ""));
+        nameValuePairs.add(new BasicNameValuePair("group", userDTO.getGroup()));
+        //nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(userDTO.getImage(), Base64.DEFAULT)));
 
         networkDAO.request(NetworkDAO.UPDATE, nameValuePairs);
 
         // Also save to local database if its not a sync operation
         //if (sync == 0) {
-        offlineItemDAO.updateItem(itemDTO, 1);
+        offlineUserDAO.updateUser(userDTO, 1);
         //}
     }
 
 
     @Override
-    public void removeItemByOnlineId(int onlineId) throws Exception {
+    public void removeUserById(int id) throws Exception {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("onlineid", onlineId + ""));
+        nameValuePairs.add(new BasicNameValuePair("onlineid", id + ""));
         networkDAO.request(NetworkDAO.REMOVE, nameValuePairs);
 
         // Also save to local database if its not a sync operation
-        offlineItemDAO.removeItemByOnlineId(onlineId);
+        offlineUserDAO.removeUserById(id);
     }
 
     @Override
-    public void removeItemByCacheId(long cacheId) throws Exception {
+    public void removeUserByCacheId(long cacheId) throws Exception {
 
     }
 
     @Override
-    public List<ItemDTO> getNotSyncedAddedItems() throws Exception {
+    public List<UserDTO> getNotSyncedAddedUsers() throws Exception {
         return null;
     }
 
     @Override
-    public List<ItemDTO> getNotSyncedRemovedItems() throws Exception {
+    public List<UserDTO> getNotSyncedRemovedUsers() throws Exception {
         return null;
     }
 }

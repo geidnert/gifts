@@ -21,7 +21,7 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
     public static final String USER = "user";
     public static final String ID = "id";
     public static final String CACHE_ID = "cache_id";
-    public static final String FAMILY = "family";
+    public static final String GROUP = "group";
     public static final String EMAIL = "email";
     public static final String FIRSTNAME = "firstname";
     public static final String LASTNAME = "lastname";
@@ -34,7 +34,7 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createItems = "CREATE TABLE " + USER + " ( " + CACHE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ID + " INTEGER, " + EMAIL + " TEXT, " + FIRSTNAME + " TEXT, " + LASTNAME + " TEXT );";
+                ID + " INTEGER, " + EMAIL + " TEXT, " + FIRSTNAME + " TEXT, " + LASTNAME + " TEXT, " + GROUP + " TEXT );";
 
         db.execSQL(createItems);
     }
@@ -44,7 +44,7 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
         db.execSQL("DROP TABLE IF EXISTS " + USER);
 
         String createItems = "CREATE TABLE " + USER + " ( " + CACHE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ID + " INTEGER, " + EMAIL + " TEXT, " + FIRSTNAME + " TEXT, " + LASTNAME + " TEXT );";
+                ID + " INTEGER, " + EMAIL + " TEXT, " + FIRSTNAME + " TEXT, " + LASTNAME + " TEXT, " + GROUP + " TEXT );";
 
         db.execSQL(createItems);
     }
@@ -52,7 +52,7 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
     @Override
     public List<UserDTO> getUsers(String searchTerm, int searchType) throws IOException, JSONException {
 
-        String query = "Select * FROM " + USER + " WHERE " + FAMILY + " LIKE  \"%" + searchTerm + "%\" AND " + SYNCED + " < 2";
+        String query = "Select * FROM " + USER + " WHERE " + GROUP + " LIKE  \"%" + searchTerm + "%\" AND " + SYNCED + " < 2";
 
         // Search all in a location
         if (searchType == ALL) {
@@ -101,13 +101,10 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
         cv.put(EMAIL, userDTO.getEmail());
         cv.put(FIRSTNAME, userDTO.getFirstname());
         cv.put(LASTNAME, userDTO.getLastname());
+        cv.put(GROUP, userDTO.getGroup());
 
 
-        cv.put(IMAGE, userDTO.getImage());
-        cv.put(QRCODE, userDTO.getQrCode());
-        cv.put(SYNCED, sync);
-        cv.put(LONGITUDE, userDTO.getLongitude());
-        cv.put(LATITUDE, userDTO.getLatitude());
+
 
         long cachceId = getWritableDatabase().insert(USER, null, cv);
         userDTO.setCacheID(cachceId);
@@ -118,30 +115,25 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
         System.out.println("values: " + userDTO.toString());
         ContentValues cv = new ContentValues();
 
-        cv.put(ONLINEID, userDTO.getOnlineid());
-        cv.put(NAME, userDTO.getName());
-        cv.put(DESCRIPTION, userDTO.getDescription());
-        cv.put(COUNT, userDTO.getCount());
-        cv.put(LOCATION, userDTO.getLocation());
-        cv.put(IMAGE, userDTO.getImage());
-        cv.put(QRCODE, userDTO.getQrCode());
-        cv.put(SYNCED, sync);
-        cv.put(LONGITUDE, userDTO.getLongitude());
-        cv.put(LATITUDE, userDTO.getLatitude());
+        cv.put(ID, userDTO.getId());
+        cv.put(EMAIL, userDTO.getEmail());
+        cv.put(FIRSTNAME, userDTO.getFirstname());
+        cv.put(LASTNAME, userDTO.getLastname());
+        cv.put(GROUP, userDTO.getGroup());
 
         String where = "onlineid=?";
 
-        String[] whereArgs = {Long.toString(userDTO.getOnlineid())};
+        String[] whereArgs = {Long.toString(userDTO.getId())};
         SQLiteDatabase db = this.getWritableDatabase();
         db.update(USER, cv, where, whereArgs);
 
     }
 
     @Override
-    public void removeUserByOnlineId(int onlineId) throws Exception {
+    public void removeUserById(int onlineId) throws Exception {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(USER, ONLINEID + "=" + onlineId, null);
+        db.delete(USER, ID + "=" + onlineId, null);
         db.close();
     }
 
