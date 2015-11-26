@@ -1,7 +1,6 @@
 package com.solidparts.gifts.service;
 
 import com.solidparts.gifts.dto.GiftDTO;
-import com.solidparts.gifts.dto.UserDTO;
 
 import java.util.List;
 

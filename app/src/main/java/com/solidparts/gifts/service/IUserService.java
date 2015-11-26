@@ -13,6 +13,8 @@ public interface IUserService {
 
     public List<UserDTO> getUsers(String searchString, int searchType) throws Exception;
 
+    public UserDTO getUser(String email, String password) throws Exception;
+
     public void addUser(UserDTO userDTO) throws Exception;
 
     public void updateUser(UserDTO userDTO) throws Exception;

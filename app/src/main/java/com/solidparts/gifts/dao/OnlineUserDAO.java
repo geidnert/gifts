@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Base64;
 
+import com.solidparts.gifts.dto.DataDTO;
 import com.solidparts.gifts.dto.UserDTO;
 
 import org.apache.http.NameValuePair;
@@ -41,7 +42,7 @@ public class OnlineUserDAO implements IUserDAO {
 
     }
 
-    /*@Override
+    @Override
     public DataDTO getAppData() throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         String request = networkDAO.request(NetworkDAO.APP_DATA, nameValuePairs);
@@ -52,7 +53,7 @@ public class OnlineUserDAO implements IUserDAO {
         dataDTO.setLatestAppVersion(appVersion);
 
         return dataDTO;
-    }*/
+    }
 
     @Override
     public List<UserDTO> getUsers(String searchTerm, int searchType) throws IOException, JSONException {
@@ -89,6 +90,44 @@ public class OnlineUserDAO implements IUserDAO {
         }
 
         return allUsers;
+    }
+
+    @Override
+    public UserDTO getUser(String userEmail, String userPassword) throws IOException, JSONException {
+        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("email", userEmail));
+        nameValuePairs.add(new BasicNameValuePair("password", userPassword));
+
+        String request = networkDAO.request(NetworkDAO.SEARCH, nameValuePairs);
+
+        List<UserDTO> allUsers = new ArrayList<UserDTO>();
+        JSONObject root = new JSONObject(request);
+        JSONArray items = root.getJSONArray("user");
+
+        for (int i = 0; i < items.length(); i++) {
+            JSONObject jsonUser = items.getJSONObject(i).getJSONObject("user");
+
+            int id = jsonUser.getInt("id");
+            String firstname = jsonUser.getString("firstname");
+            String lastname = jsonUser.getString("lastname");
+            String email = jsonUser.getString("email");
+            String group = jsonUser.getString("group");
+
+
+            //byte[] image = Base64.decode(jsonUser.get("image").toString(), Base64.DEFAULT);
+
+
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(id);
+            userDTO.setEmail(email);
+            userDTO.setFirstname(firstname);
+            userDTO.setLastname(lastname);
+            userDTO.setGroup(group);
+
+            allUsers.add(userDTO);
+        }
+
+        return allUsers.get(0);
     }
 
     @Override

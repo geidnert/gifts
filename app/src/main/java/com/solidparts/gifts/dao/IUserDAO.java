@@ -23,6 +23,9 @@ public interface IUserDAO {
 
     public List<UserDTO> getUsers(String searchTerm, int searchType) throws Exception;
 
+    public UserDTO getUser(String email, String password) throws Exception;
+
+
     public void addUser(UserDTO userDTO, int sync) throws Exception;
 
     public void updateUser(UserDTO userDTO, int sync) throws Exception;

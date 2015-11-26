@@ -41,6 +41,24 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public UserDTO getUser(String email, String password) throws Exception {
+        UserDTO user = null;
+
+        try {
+            user = onlineUserDAO.getUser(email, password);
+            //users = offlineUserDAO.getItems(searchTerm, searchType);
+        } catch (Exception e) {
+            // No network, use offline mode
+            try {
+                user = offlineUserDAO.getUser(email, password);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+        }
+        return user;
+    }
+
+    @Override
     public List<UserDTO> getUsers(String searchTerm, int searchType) throws Exception {
         List<UserDTO> users = null;
 

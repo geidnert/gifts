@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.solidparts.gifts.dto.DataDTO;
 import com.solidparts.gifts.dto.UserDTO;
 
 import org.json.JSONException;
@@ -25,10 +26,16 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
     public static final String EMAIL = "email";
     public static final String FIRSTNAME = "firstname";
     public static final String LASTNAME = "lastname";
+    public static final String PASSWORD = "password";
     public static final String SYNCED = "synced";
 
     public OfflineUserDAO(Context context) {
         super(context, "gifts.db", null, 3);
+    }
+
+    @Override
+    public DataDTO getAppData() throws Exception {
+        return null;
     }
 
     @Override
@@ -60,6 +67,16 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
         }
         List<UserDTO> searchResultList = getUserDTOs(query);
         return searchResultList;
+    }
+
+    @Override
+    public UserDTO getUser(String email, String password) throws IOException, JSONException {
+
+        String query = "Select * FROM " + USER + " WHERE " + EMAIL + " LIKE " + email + " AND " + PASSWORD + " LIKE " + password + " AND "  + SYNCED + " < 2";
+
+
+        List<UserDTO> searchResultList = getUserDTOs(query);
+        return searchResultList.get(0);
     }
 
     public List<UserDTO> getNotSyncedAddedUsers() throws Exception {
