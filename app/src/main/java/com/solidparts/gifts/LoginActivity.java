@@ -38,6 +38,7 @@ import java.util.List;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
+    public final static String EXTRA_USERDTO = "userDTO";
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -280,8 +281,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
 
             if(user != null) {
+
+
+
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                //intent.putExtra(EXTRA_ITEMDTO, allItems.get(position));
+                intent.putExtra(EXTRA_USERDTO, user);
+                //intent.putExtra(EXTRA_USERDTO, user);
                 //intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
                 startActivity(intent);
             } else {

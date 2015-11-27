@@ -7,16 +7,23 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.solidparts.gifts.dto.UserDTO;
 import com.solidparts.gifts.service.FriendListActivity;
 
 
 public class MainActivity extends ActionBarActivity {
+    private UserDTO userDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        userDTO = (UserDTO) getIntent().getSerializableExtra("userDTO");
+
+        ((TextView) findViewById(R.id.msg)).setText("Welcome " + userDTO.getFirstname() + " to your gift organizer.");
     }
 
     @Override

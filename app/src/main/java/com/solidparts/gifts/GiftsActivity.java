@@ -7,11 +7,14 @@ import android.view.MenuItem;
 
 
 public class GiftsActivity extends ActionBarActivity {
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gifts);
+
+        email = getIntent().getStringExtra("email");
     }
 
     @Override

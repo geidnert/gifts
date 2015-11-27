@@ -1,9 +1,11 @@
 package com.solidparts.gifts.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by geidnert on 25/11/15.
  */
-public class UserDTO {
+public class UserDTO implements Serializable {
     private long cacheID;
     int id;
     String email;
