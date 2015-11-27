@@ -102,7 +102,7 @@ public class OnlineUserDAO implements IUserDAO {
 
         List<UserDTO> allUsers = new ArrayList<UserDTO>();
         JSONObject root = new JSONObject(request);
-        JSONArray items = root.getJSONArray("user");
+        JSONArray items = root.getJSONArray("users");
 
         for (int i = 0; i < items.length(); i++) {
             JSONObject jsonUser = items.getJSONObject(i).getJSONObject("user");
@@ -111,7 +111,7 @@ public class OnlineUserDAO implements IUserDAO {
             String firstname = jsonUser.getString("firstname");
             String lastname = jsonUser.getString("lastname");
             String email = jsonUser.getString("email");
-            String group = jsonUser.getString("group");
+            String groupId = jsonUser.getString("groupId");
 
 
             //byte[] image = Base64.decode(jsonUser.get("image").toString(), Base64.DEFAULT);
@@ -122,7 +122,7 @@ public class OnlineUserDAO implements IUserDAO {
             userDTO.setEmail(email);
             userDTO.setFirstname(firstname);
             userDTO.setLastname(lastname);
-            userDTO.setGroup(group);
+            userDTO.setGroup(groupId);
 
             allUsers.add(userDTO);
         }
