@@ -1,9 +1,14 @@
 package com.solidparts.gifts;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import com.solidparts.gifts.service.FriendListActivity;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -34,5 +39,29 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onMyGifts(View v) {
+        try {
+            Intent intent = new Intent(MainActivity.this, GiftsActivity.class);
+            //intent.putExtra(EXTRA_ITEMDTO, allItems.get(position));
+            //intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
+            startActivity(intent);
+        } catch (ActivityNotFoundException anfe) {
+            //on catch, show the download dialog
+            //showDialog(SearchActivity.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+        }
+    }
+
+    public void onOthersGifts(View v) {
+        try {
+            Intent intent = new Intent(MainActivity.this, FriendListActivity.class);
+            //intent.putExtra(EXTRA_ITEMDTO, allItems.get(position));
+            //intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
+            startActivity(intent);
+        } catch (ActivityNotFoundException anfe) {
+            //on catch, show the download dialog
+            //showDialog(SearchActivity.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+        }
     }
 }

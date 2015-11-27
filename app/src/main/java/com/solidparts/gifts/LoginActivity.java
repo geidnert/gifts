@@ -268,15 +268,23 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            UserDTO user = null;
 
             try {
                 // Simulate network access.
-                UserDTO user = userService.getUser(mEmail, mPassword);
+                user = userService.getUser(mEmail, mPassword);
+
+            } catch (Exception e) {
+                return false;
+            }
+
+
+            if(user != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 //intent.putExtra(EXTRA_ITEMDTO, allItems.get(position));
                 //intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
                 startActivity(intent);
-            } catch (Exception e) {
+            } else {
                 return false;
             }
 
