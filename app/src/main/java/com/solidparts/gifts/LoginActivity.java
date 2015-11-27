@@ -279,15 +279,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
 
-
             if(user != null) {
-
-
-
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 intent.putExtra(EXTRA_USERDTO, user);
-                //intent.putExtra(EXTRA_USERDTO, user);
-                //intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
                 startActivity(intent);
             } else {
                 return false;

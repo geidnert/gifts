@@ -4,17 +4,22 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.solidparts.gifts.dto.UserDTO;
 
 
 public class GiftsActivity extends ActionBarActivity {
-    private String email;
+    private UserDTO userDTO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gifts);
 
-        email = getIntent().getStringExtra("email");
+        userDTO = (UserDTO) getIntent().getSerializableExtra("userDTO");
+
+        ((TextView) findViewById(R.id.userName)).setText(userDTO.getFirstname() + " " + userDTO.getLastname());
     }
 
     @Override

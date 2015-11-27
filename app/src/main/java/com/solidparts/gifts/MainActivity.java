@@ -14,6 +14,8 @@ import com.solidparts.gifts.service.FriendListActivity;
 
 
 public class MainActivity extends ActionBarActivity {
+    public final static String EXTRA_USERDTO = "userDTO";
+
     private UserDTO userDTO;
 
     @Override
@@ -51,8 +53,7 @@ public class MainActivity extends ActionBarActivity {
     public void onMyGifts(View v) {
         try {
             Intent intent = new Intent(MainActivity.this, GiftsActivity.class);
-            //intent.putExtra(EXTRA_ITEMDTO, allItems.get(position));
-            //intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
+            intent.putExtra(EXTRA_USERDTO, userDTO);
             startActivity(intent);
         } catch (ActivityNotFoundException anfe) {
             //on catch, show the download dialog
@@ -63,8 +64,7 @@ public class MainActivity extends ActionBarActivity {
     public void onOthersGifts(View v) {
         try {
             Intent intent = new Intent(MainActivity.this, FriendListActivity.class);
-            //intent.putExtra(EXTRA_ITEMDTO, allItems.get(position));
-            //intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
+            intent.putExtra(EXTRA_USERDTO, userDTO);
             startActivity(intent);
         } catch (ActivityNotFoundException anfe) {
             //on catch, show the download dialog
