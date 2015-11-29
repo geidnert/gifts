@@ -18,7 +18,7 @@ import java.util.List;
  * Created by geidnert on 25/11/15.
  */
 public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
-    public static final String ITEM = "item";
+    public static final String GIFT = "gift";
     public static final String CACHE_ID = "cache_id";
     public static final String NAME = "name";
     public static final String DESCRIPTION = "description";
@@ -37,7 +37,7 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createItems = "CREATE TABLE " + ITEM + " ( " + CACHE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        String createItems = "CREATE TABLE " + GIFT + " ( " + CACHE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ONLINEID + " INTEGER, " + NAME + " TEXT, " + DESCRIPTION + " TEXT, " + COUNT + " INTEGER, " + IMAGE +
                 " BLOB, " + QRCODE + " TEXT, " + LOCATION + " TEXT, " + SYNCED + " INTEGER, " + LONGITUDE + " DOUBLE, " +
                 LATITUDE + " DOUBLE );";
@@ -47,9 +47,9 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + ITEM);
+        db.execSQL("DROP TABLE IF EXISTS " + GIFT);
 
-        String createItems = "CREATE TABLE " + ITEM + " ( " + CACHE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        String createItems = "CREATE TABLE " + GIFT + " ( " + CACHE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 ONLINEID + " INTEGER, " + NAME + " TEXT, " + DESCRIPTION + " TEXT, " + COUNT + " INTEGER, " + IMAGE +
                 " BLOB, " + QRCODE + " TEXT, " + LOCATION + " TEXT, " + SYNCED + " INTEGER, " + LONGITUDE + " DOUBLE, " +
                 LATITUDE + " DOUBLE );";
@@ -58,26 +58,26 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
     }
 
     @Override
-    public List<GiftDTO> getGifts(String searchTerm, int searchType) throws IOException, JSONException {
+    public List<GiftDTO> getGifts(int userId) throws IOException, JSONException {
 
-        String query = "Select * FROM " + ITEM + " WHERE " + NAME + " LIKE  \"%" + searchTerm + "%\"" + " OR " + LOCATION + " LIKE \"%" + searchTerm + "%\" AND " + SYNCED + " < 2";
+        String query = "Select * FROM " + GIFT + " WHERE " + NAME + " LIKE  \"%" + userId + "%\"" + " OR " + LOCATION + " LIKE \"%" + userId + "%\" AND " + SYNCED + " < 2";
 
         // Search all in a location
-        if (searchType == ALL) {
-            query = "Select * FROM " + ITEM;
-        }
+        //if (searchType == ALL) {
+        //    query = "Select * FROM " + GIFT;
+        //}
         List<GiftDTO> searchResultList = getGiftDTOs(query);
         return searchResultList;
     }
 
     public List<GiftDTO> getNotSyncedAddedGifts() throws Exception {
-        String query = "Select * FROM " + ITEM + " WHERE " + SYNCED + " = 0";
+        String query = "Select * FROM " + GIFT + " WHERE " + SYNCED + " = 0";
         List<GiftDTO> searchResultList = getGiftDTOs(query);
         return searchResultList;
     }
 
     public List<GiftDTO> getNotSyncedRemovedGifts() throws Exception {
-        String query = "Select * FROM " + ITEM + " WHERE " + SYNCED + " = 2";
+        String query = "Select * FROM " + GIFT + " WHERE " + SYNCED + " = 2";
         List<GiftDTO> searchResultList = getGiftDTOs(query);
         return searchResultList;
     }
@@ -112,7 +112,7 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
         cv.put(NAME, itemDTO.getName());
         cv.put(DESCRIPTION, itemDTO.getDescription());
 
-        long cachceId = getWritableDatabase().insert(ITEM, null, cv);
+        long cachceId = getWritableDatabase().insert(GIFT, null, cv);
         itemDTO.setCacheID(cachceId);
     }
 
@@ -129,7 +129,7 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
 
         String[] whereArgs = {Long.toString(giftDTODTO.getId())};
         SQLiteDatabase db = this.getWritableDatabase();
-        db.update(ITEM, cv, where, whereArgs);
+        db.update(GIFT, cv, where, whereArgs);
 
     }
 
@@ -137,7 +137,7 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
     public void removeGiftById(int onlineId) throws Exception {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(ITEM, ONLINEID + "=" + onlineId, null);
+        db.delete(GIFT, ONLINEID + "=" + onlineId, null);
         db.close();
     }
 
@@ -145,7 +145,7 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
     public void removeGiftByCacheId(long cacheId) throws Exception {
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(ITEM, CACHE_ID + "=" + cacheId, null);
+        db.delete(GIFT, CACHE_ID + "=" + cacheId, null);
         db.close();
     }
 }

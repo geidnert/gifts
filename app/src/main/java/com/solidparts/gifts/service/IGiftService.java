@@ -8,7 +8,7 @@ import java.util.List;
  * Created by geidnert on 26/11/15.
  */
 public interface IGiftService {
-    public List<GiftDTO> getGifts(String searchString, int searchType) throws Exception;
+    public List<GiftDTO> getGifts(int userId) throws Exception;
 
     public void addGift(GiftDTO giftDTO) throws Exception;
 
@@ -16,7 +16,7 @@ public interface IGiftService {
 
     public void removeGift(GiftDTO giftDTO) throws Exception;
 
-    public int syncToOnlineDB();
+    public int syncToOnlineDB(int userId);
 
-    public int syncFromOnlineDB();
+    public int syncFromOnlineDB(int userId);
 }

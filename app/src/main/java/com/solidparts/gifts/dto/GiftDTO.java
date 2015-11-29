@@ -1,17 +1,30 @@
 package com.solidparts.gifts.dto;
 
+import java.util.Arrays;
+
 /**
  * Created by geidnert on 25/11/15.
  */
 public class GiftDTO {
     private long cacheID;
     int id;
+    int userId;
     String name;
     String description;
+    String url;
+    byte[] image;
     boolean bought;
 
     public long getCacheID() {
         return cacheID;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public void setCacheID(long cacheID) {
@@ -50,6 +63,22 @@ public class GiftDTO {
         this.bought = bought;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,9 +100,13 @@ public class GiftDTO {
         return "GiftDTO{" +
                 "cacheID=" + cacheID +
                 ", id=" + id +
+                ", userId=" + userId +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", image=" + Arrays.toString(image) +
                 ", bought=" + bought +
                 '}';
     }
+
 }

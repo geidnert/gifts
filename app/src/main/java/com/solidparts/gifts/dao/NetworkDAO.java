@@ -20,6 +20,7 @@ public class NetworkDAO implements INetworkDAO{
     public static final String UPDATE = "update.php";
     public static final String REMOVE = "remove.php";
     public static final String SEARCH = "get.php";
+    public static final String SEARCH_GIFT = "searchGift.php";
     public static final String APP_DATA = "getAppData.php";
     public static final String DATABASE_DEV = "gifts_dev";
     public static final String DATABASE_LIVE = "gifts";

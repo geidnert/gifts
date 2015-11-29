@@ -29,16 +29,16 @@ public class GiftService implements IGiftService {
 
 
     @Override
-    public List<GiftDTO> getGifts(String searchTerm, int searchType) throws Exception {
+    public List<GiftDTO> getGifts(int userId) throws Exception {
         List<GiftDTO> gifts = null;
 
         try {
-            gifts = onlineGiftDAO.getGifts(searchTerm, searchType);
+            gifts = onlineGiftDAO.getGifts(userId);
             //items = offlineGiftDAO.getItems(searchTerm, searchType);
         } catch (Exception e) {
             // No network, use offline mode
             try {
-                gifts = offlineGiftDAO.getGifts(searchTerm, searchType);
+                gifts = offlineGiftDAO.getGifts(userId);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -107,7 +107,7 @@ public class GiftService implements IGiftService {
 
 
     @Override
-    public int syncToOnlineDB() {
+    public int syncToOnlineDB(int userId) {
         // get all items that are not synced from local db
         List<GiftDTO> notSyncedAddedGifts = null;
         List<GiftDTO> notSyncedRemovedGifts = null;
@@ -153,7 +153,7 @@ public class GiftService implements IGiftService {
     }
 
     @Override
-    public int syncFromOnlineDB() {
+    public int syncFromOnlineDB(int userId) {
         if (!isNetworkAvaliable(context)) {
             return -1;
         }
@@ -162,8 +162,8 @@ public class GiftService implements IGiftService {
         List<GiftDTO> onlineGifts = null;
         List<GiftDTO> localGifts = null;
         try {
-            onlineGifts = onlineGiftDAO.getGifts("all", OfflineGiftDAO.DEFAULT);
-            localGifts = offlineGiftDAO.getGifts("all", OfflineGiftDAO.ALL);
+            onlineGifts = onlineGiftDAO.getGifts(userId);
+            localGifts = offlineGiftDAO.getGifts(userId);
         } catch (Exception e1) {
             e1.printStackTrace();
             return -1;

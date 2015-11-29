@@ -8,14 +8,71 @@
 
     <TextView android:text="@string/userName" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/userName" />
+        android:id="@+id/userName"
+        android:textSize="20dp" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/image"
         android:layout_below="@+id/userName"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:background="#e9e9e9"
+        android:onClick="onTakePhoto" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        android:id="@+id/addGift"
+        android:background="#99ff8b"
+        android:layout_below="@+id/description"
+        android:layout_toRightOf="@+id/url"
+        android:layout_toEndOf="@+id/url"
+        android:onClick="onAddGift" />
+    <!--ListView
+        android:id="@+id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" /-->
+    <ListView
+        android:id="@android:id/list"
+
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+
+        android:layout_below="@+id/addGift"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/url"
+        android:textSize="12dp"
+        android:layout_below="@+id/image"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:text="www.solidparts.se" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/description"
+        android:layout_alignTop="@+id/image"
+        android:layout_toRightOf="@+id/image"
+        android:layout_toEndOf="@+id/image"
+        android:text="Add description and then i can go home and then i will go away because i want to"
+        android:textSize="12dp"
+        android:layout_marginLeft="4dp" />
 
 </RelativeLayout>

@@ -56,11 +56,11 @@ public class OnlineGiftDAO implements IGiftDAO {
     }*/
 
     @Override
-    public List<GiftDTO> getGifts(String searchTerm, int searchType) throws IOException, JSONException {
+    public List<GiftDTO> getGifts(int userId) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("searchterm", searchTerm));
+        nameValuePairs.add(new BasicNameValuePair("userId", "" + userId));
 
-        String request = networkDAO.request(NetworkDAO.SEARCH, nameValuePairs);
+        String request = networkDAO.request(NetworkDAO.SEARCH_GIFT, nameValuePairs);
 
         List<GiftDTO> allItems = new ArrayList<GiftDTO>();
         JSONObject root = new JSONObject(request);
@@ -70,21 +70,22 @@ public class OnlineGiftDAO implements IGiftDAO {
             JSONObject jsonItem = items.getJSONObject(i).getJSONObject("gift");
 
             int id = jsonItem.getInt("id");
-            int count = jsonItem.getInt("count");
+            int uuserId = jsonItem.getInt("userId");
             String name = jsonItem.getString("name");
             String description = jsonItem.getString("description");
-            String location = jsonItem.getString("location");
-            double longitude = jsonItem.getDouble("longitude");
-            double latitude = jsonItem.getDouble("latitude");
+            String url = jsonItem.getString("url");
+            boolean bought = jsonItem.getInt("bought") == 1;
 
             byte[] image = Base64.decode(jsonItem.get("image").toString(), Base64.DEFAULT);
-            byte[] qrCode = Base64.decode(jsonItem.get("qrcode").toString(), Base64.DEFAULT);
 
             GiftDTO giftDTO = new GiftDTO();
             giftDTO.setId(id);
-
+            giftDTO.setUserId(uuserId);
             giftDTO.setName(name);
             giftDTO.setDescription(description);
+            giftDTO.setBought(bought);
+            giftDTO.setImage(image);
+            giftDTO.setUrl(url);
 
             allItems.add(giftDTO);
         }
@@ -95,8 +96,11 @@ public class OnlineGiftDAO implements IGiftDAO {
     @Override
     public void addGift(GiftDTO giftDTO, int sync) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("name", giftDTO.getName()));
+        //nameValuePairs.add(new BasicNameValuePair("name", giftDTO.getName()));
         nameValuePairs.add(new BasicNameValuePair("description", giftDTO.getDescription()));
+        nameValuePairs.add(new BasicNameValuePair("userId", ""+giftDTO.getUserId()));
+        nameValuePairs.add(new BasicNameValuePair("url", giftDTO.getUrl()));
+        nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.DEFAULT)));
 
 
         String request = networkDAO.request(NetworkDAO.ADD, nameValuePairs);
