@@ -125,10 +125,15 @@ public class FriendListActivity extends ListActivity {
                         // ListView Clicked item index
                         int itemPosition = position;
 
-                        /******Intent intent = new Intent(SearchActivity.this, AddItemActivity.class);
-                        intent.putExtra(EXTRA_ITEMDTO, allItems.get(position));
-                        intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
-                        startActivity(intent);*****/
+                        Intent intent = new Intent(FriendListActivity.this, GiftsActivity.class);
+                        intent.putExtra(EXTRA_USERDTO, userDTO);
+                        intent.putExtra(EXTRA_VIEWUSERDTO, allUsers.get(position));
+                        startActivity(intent);
+
+                        //Intent intent = new Intent(SearchActivity.this, AddItemActivity.class);
+                        //intent.putExtra(EXTRA_ITEMDTO, allItems.get(position));
+                        //intent.putExtra(EXTRA_SEARCHWORD, ((EditText) findViewById(R.id.searchWord)).getText().toString());
+                        //startActivity(intent);
 
                         // ListView Clicked item value
                         //String itemValue = (String) itemlistView.getItemAtPosition(position);

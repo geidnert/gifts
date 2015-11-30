@@ -73,7 +73,7 @@ public class OnlineUserDAO implements IUserDAO {
             String firstname = jsonUser.getString("firstname");
             String lastname = jsonUser.getString("lastname");
             String email = jsonUser.getString("email");
-            String group = jsonUser.getString("group");
+            String group = jsonUser.getString("groupId");
 
 
             //byte[] image = Base64.decode(jsonUser.get("image").toString(), Base64.DEFAULT);

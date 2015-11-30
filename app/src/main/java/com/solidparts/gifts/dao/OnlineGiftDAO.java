@@ -135,7 +135,7 @@ public class OnlineGiftDAO implements IGiftDAO {
     @Override
     public void removeGiftById(int id) throws Exception {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("onlineid", id + ""));
+        nameValuePairs.add(new BasicNameValuePair("id", id + ""));
         networkDAO.request(NetworkDAO.REMOVE, nameValuePairs);
 
         // Also save to local database if its not a sync operation

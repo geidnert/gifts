@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.solidparts.gifts.GiftAdapter;
 import com.solidparts.gifts.dao.IGiftDAO;
 import com.solidparts.gifts.dao.OfflineGiftDAO;
 import com.solidparts.gifts.dao.OnlineGiftDAO;

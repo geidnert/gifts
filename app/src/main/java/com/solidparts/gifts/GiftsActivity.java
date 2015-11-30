@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,11 +49,18 @@ public class GiftsActivity extends ListActivity {
         messageManager = new MessageManager();
         giftImage = ((ImageView) findViewById(R.id.image));
 
-        ((TextView) findViewById(R.id.userName)).setText(userDTO.getFirstname() + " " + userDTO.getLastname() + "'s gifts");
+        ((TextView) findViewById(R.id.userName)).setText(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
 
         SearchGiftTask searchGiftTask = new SearchGiftTask();
 
-        searchGiftTask.execute(new String[]{"" + userDTO.getId()});
+        searchGiftTask.execute(new String[]{"" + viewUserDTO.getId()});
+
+        if(!viewUserDTO.equals(userDTO)){
+            ((ImageView) findViewById(R.id.image)).setVisibility(View.INVISIBLE);
+            ((TextView) findViewById(R.id.description)).setVisibility(View.INVISIBLE);
+            ((TextView) findViewById(R.id.url)).setVisibility(View.INVISIBLE);
+            ((Button) findViewById(R.id.addGift)).setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -239,7 +247,7 @@ public class GiftsActivity extends ListActivity {
 
                 //ArrayAdapter<String> itemAdaptor = new ArrayAdapter<String>(GiftsActivity.this, R.layout.item_gift, allItemNames);
 
-                GiftAdapter giftAdapter = new GiftAdapter(GiftsActivity.this, allGifts);
+                GiftAdapter giftAdapter = new GiftAdapter(GiftsActivity.this, allGifts, viewUserDTO.equals(userDTO), userDTO, giftService);
 
 
                 // show the search resuts in the list.
@@ -253,6 +261,8 @@ public class GiftsActivity extends ListActivity {
                 //ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchActivity.this, android.R.layout.simple_list_item_1, android.R.id., allItems);
 // Assign adapter to ListView
                 giftlistView.setAdapter(giftAdapter);
+
+
 
                 // ListView Item Click Listener
                 giftlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
