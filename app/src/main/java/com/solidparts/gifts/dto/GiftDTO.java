@@ -9,6 +9,7 @@ public class GiftDTO {
     private long cacheID;
     int id;
     int userId;
+    int boughtById;
     String name;
     String description;
     String url;
@@ -25,6 +26,14 @@ public class GiftDTO {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public int getBoughtById() {
+        return boughtById;
+    }
+
+    public void setBoughtById(int boughtById) {
+        this.boughtById = boughtById;
     }
 
     public void setCacheID(long cacheID) {
@@ -101,6 +110,7 @@ public class GiftDTO {
                 "cacheID=" + cacheID +
                 ", id=" + id +
                 ", userId=" + userId +
+                ", boughtById=" + boughtById +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", url='" + url + '\'' +

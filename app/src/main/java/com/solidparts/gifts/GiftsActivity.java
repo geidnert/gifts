@@ -32,21 +32,10 @@ public class GiftsActivity extends ListActivity {
     public static final int IMAGE_GALLERY_REQUEST = 2;
 
     private UserDTO userDTO;
+    private UserDTO viewUserDTO;
     private GiftService giftService;
     private MessageManager messageManager;
     private ImageView giftImage;
-
-    String[] itemname ={
-            "Safari",
-            "Camera",
-            "Global",
-            "FireFox",
-            "UC Browser",
-            "Android Folder",
-            "VLC Player",
-            "Cold War"
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +43,12 @@ public class GiftsActivity extends ListActivity {
         setContentView(R.layout.activity_gifts);
 
         userDTO = (UserDTO) getIntent().getSerializableExtra("userDTO");
+        viewUserDTO = (UserDTO) getIntent().getSerializableExtra("viewUserDTO");
         giftService = new GiftService(this);
         messageManager = new MessageManager();
         giftImage = ((ImageView) findViewById(R.id.image));
 
-        ((TextView) findViewById(R.id.userName)).setText(userDTO.getFirstname() + " " + userDTO.getLastname());
-
-        this.setListAdapter(new ArrayAdapter<String>(
-                this, R.layout.item_gift,
-                R.id.giftDescription, itemname));
+        ((TextView) findViewById(R.id.userName)).setText(userDTO.getFirstname() + " " + userDTO.getLastname() + "'s gifts");
 
         SearchGiftTask searchGiftTask = new SearchGiftTask();
 

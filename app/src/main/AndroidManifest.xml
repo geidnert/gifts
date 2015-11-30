@@ -27,7 +27,7 @@
             android:label="@string/title_activity_gifts" >
         </activity>
         <activity
-            android:name=".service.FriendListActivity"
+            android:name=".FriendListActivity"
             android:label="@string/title_activity_friend_list" >
         </activity>
 

@@ -11,7 +11,7 @@ import java.util.List;
 public interface IUserService {
     public DataDTO getAppData() throws Exception;
 
-    public List<UserDTO> getUsers(String searchString, int searchType) throws Exception;
+    public List<UserDTO> getUsers(int groupId) throws Exception;
 
     public UserDTO getUser(String email, String password) throws Exception;
 

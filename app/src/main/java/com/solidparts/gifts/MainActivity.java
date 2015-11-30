@@ -10,11 +10,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.solidparts.gifts.dto.UserDTO;
-import com.solidparts.gifts.service.FriendListActivity;
 
 
 public class MainActivity extends ActionBarActivity {
     public final static String EXTRA_USERDTO = "userDTO";
+    public final static String EXTRA_VIEWUSERDTO = "viewUserDTO";
 
     private UserDTO userDTO;
 
@@ -54,6 +54,7 @@ public class MainActivity extends ActionBarActivity {
         try {
             Intent intent = new Intent(MainActivity.this, GiftsActivity.class);
             intent.putExtra(EXTRA_USERDTO, userDTO);
+            intent.putExtra(EXTRA_VIEWUSERDTO, userDTO);
             startActivity(intent);
         } catch (ActivityNotFoundException anfe) {
             //on catch, show the download dialog

@@ -56,11 +56,11 @@ public class OnlineUserDAO implements IUserDAO {
     }
 
     @Override
-    public List<UserDTO> getUsers(String searchTerm, int searchType) throws IOException, JSONException {
+    public List<UserDTO> getUsers(int groupId) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("searchterm", searchTerm));
+        nameValuePairs.add(new BasicNameValuePair("groupId", ""+groupId));
 
-        String request = networkDAO.request(NetworkDAO.SEARCH, nameValuePairs);
+        String request = networkDAO.request(NetworkDAO.GET_ALL_USERS, nameValuePairs);
 
         List<UserDTO> allUsers = new ArrayList<UserDTO>();
         JSONObject root = new JSONObject(request);

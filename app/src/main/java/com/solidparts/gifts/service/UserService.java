@@ -59,16 +59,16 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<UserDTO> getUsers(String searchTerm, int searchType) throws Exception {
+    public List<UserDTO> getUsers(int groupId) throws Exception {
         List<UserDTO> users = null;
 
         try {
-            users = onlineUserDAO.getUsers(searchTerm, searchType);
+            users = onlineUserDAO.getUsers(groupId);
             //users = offlineUserDAO.getItems(searchTerm, searchType);
         } catch (Exception e) {
             // No network, use offline mode
             try {
-                users = offlineUserDAO.getUsers(searchTerm, searchType);
+                users = offlineUserDAO.getUsers(groupId);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -192,8 +192,8 @@ public class UserService implements IUserService {
         List<UserDTO> onlineUsers = null;
         List<UserDTO> localUsers = null;
         try {
-            onlineUsers = onlineUserDAO.getUsers("all", OfflineUserDAO.DEFAULT);
-            localUsers = offlineUserDAO.getUsers("all", OfflineUserDAO.ALL);
+            //onlineUsers = onlineUserDAO.getUsers("all", OfflineUserDAO.DEFAULT);
+            //localUsers = offlineUserDAO.getUsers("all", OfflineUserDAO.ALL);
         } catch (Exception e1) {
             e1.printStackTrace();
             return -1;

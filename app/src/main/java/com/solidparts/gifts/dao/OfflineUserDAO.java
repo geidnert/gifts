@@ -57,14 +57,10 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
     }
 
     @Override
-    public List<UserDTO> getUsers(String searchTerm, int searchType) throws IOException, JSONException {
+    public List<UserDTO> getUsers(int groupId) throws IOException, JSONException {
 
-        String query = "Select * FROM " + USER + " WHERE " + GROUP + " LIKE  \"%" + searchTerm + "%\" AND " + SYNCED + " < 2";
+        String query = "Select * FROM " + USER + " WHERE " + GROUP + " LIKE  \"%" + groupId + "%\" AND " + SYNCED + " < 2";
 
-        // Search all in a location
-        if (searchType == ALL) {
-            query = "Select * FROM " + USER;
-        }
         List<UserDTO> searchResultList = getUserDTOs(query);
         return searchResultList;
     }
