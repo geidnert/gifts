@@ -118,16 +118,20 @@ public class OnlineGiftDAO implements IGiftDAO {
     @Override
     public void updateGift(GiftDTO giftDTO, int sync) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("onlineid", giftDTO.getId() + ""));
-        nameValuePairs.add(new BasicNameValuePair("name", giftDTO.getName()));
+        nameValuePairs.add(new BasicNameValuePair("id", ""+giftDTO.getId()));
         nameValuePairs.add(new BasicNameValuePair("description", giftDTO.getDescription()));
+        nameValuePairs.add(new BasicNameValuePair("userId", ""+giftDTO.getUserId()));
+        nameValuePairs.add(new BasicNameValuePair("url", giftDTO.getUrl()));
+        nameValuePairs.add(new BasicNameValuePair("bought", ""+giftDTO.isBought()));
+        nameValuePairs.add(new BasicNameValuePair("boughtById", ""+giftDTO.getBoughtById()));
+        nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.DEFAULT)));
 
 
         networkDAO.request(NetworkDAO.UPDATE, nameValuePairs);
 
         // Also save to local database if its not a sync operation
         //if (sync == 0) {
-        offlineGiftDAO.updateGift(giftDTO, 1);
+        //////offlineGiftDAO.updateGift(giftDTO, 1);
         //}
     }
 

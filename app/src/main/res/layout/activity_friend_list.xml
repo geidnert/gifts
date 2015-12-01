@@ -26,5 +26,4 @@
         android:id="@+id/progressBar"
         android:layout_above="@android:id/list"
         android:layout_centerHorizontal="true" />
-
 </RelativeLayout>

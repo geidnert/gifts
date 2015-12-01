@@ -33,10 +33,11 @@ public class GiftsActivity extends ListActivity {
     public static final int IMAGE_GALLERY_REQUEST = 2;
 
     private UserDTO userDTO;
-    private UserDTO viewUserDTO;
+    private static UserDTO viewUserDTO;
     private GiftService giftService;
     private MessageManager messageManager;
     private ImageView giftImage;
+    private static SearchGiftTask searchGiftTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,8 @@ public class GiftsActivity extends ListActivity {
         giftImage = ((ImageView) findViewById(R.id.image));
 
         ((TextView) findViewById(R.id.userName)).setText(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
-
-        SearchGiftTask searchGiftTask = new SearchGiftTask();
-
-        searchGiftTask.execute(new String[]{"" + viewUserDTO.getId()});
+        searchGiftTask = new SearchGiftTask();
+        search();
 
         if(!viewUserDTO.equals(userDTO)){
             ((ImageView) findViewById(R.id.image)).setVisibility(View.INVISIBLE);
@@ -100,7 +99,7 @@ public class GiftsActivity extends ListActivity {
         } else {*/
             AddGiftTask addGiftTask = new AddGiftTask();
             GiftDTO[] gifts = new GiftDTO[1];
-            gifts[0] = giftDTO;
+        gifts[0] = giftDTO;
             addGiftTask.execute(gifts);
         //}
     }
@@ -134,6 +133,13 @@ public class GiftsActivity extends ListActivity {
 
         }
     }
+
+
+
+    public static void search(){
+            searchGiftTask.execute(new String[]{"" + viewUserDTO.getId()});
+    }
+
 
     //---------------------------------------------------------------------------------------------
     // -------------------------- PRIVATE -----------------------------------------------------------
@@ -246,8 +252,8 @@ public class GiftsActivity extends ListActivity {
                 }
 
                 //ArrayAdapter<String> itemAdaptor = new ArrayAdapter<String>(GiftsActivity.this, R.layout.item_gift, allItemNames);
-
-                GiftAdapter giftAdapter = new GiftAdapter(GiftsActivity.this, allGifts, viewUserDTO.equals(userDTO), userDTO, giftService);
+                final ListView giftlistView = (ListView) findViewById(android.R.id.list);
+                GiftAdapter giftAdapter = new GiftAdapter(GiftsActivity.this, allGifts, viewUserDTO.equals(userDTO), userDTO, giftService, GiftsActivity.this);
 
 
                 // show the search resuts in the list.
@@ -257,7 +263,7 @@ public class GiftsActivity extends ListActivity {
                 //Intent intent = new Intent(SearchActivity.this, AddItemActivity.class);
                 //intent.putExtra(EXTRA_ITEMDTO, allItems);
                 //startActivity(intent);
-                final ListView giftlistView = (ListView) findViewById(android.R.id.list);
+
                 //ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchActivity.this, android.R.layout.simple_list_item_1, android.R.id., allItems);
 // Assign adapter to ListView
                 giftlistView.setAdapter(giftAdapter);

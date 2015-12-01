@@ -7,19 +7,16 @@ import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.solidparts.gifts.dto.GiftDTO;
 import com.solidparts.gifts.dto.UserDTO;
 import com.solidparts.gifts.service.GiftService;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,10 +27,17 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
     private Boolean ownGift;
     private GiftService giftService;
     private UserDTO userDTO;
+    private GiftsActivity giftActivity;
+    private Context context;
+    private List<GiftDTO> gifts;
+    private GiftDTO actionGift;
 
-    public GiftAdapter(Context context, List<GiftDTO> gifts, Boolean ownGift, UserDTO userDTO, GiftService giftService) {
+    public GiftAdapter(Context context, List<GiftDTO> gifts, Boolean ownGift, UserDTO userDTO, GiftService giftService, GiftsActivity giftsActivity) {
         super(context, 0, gifts);
 
+        this.gifts = gifts;
+        this.context = context;
+        this.giftActivity = giftActivity;
         this.ownGift = ownGift;
         this.userDTO = userDTO;
         this.giftService = giftService;
@@ -43,6 +47,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
         final GiftDTO giftDTO = getItem(position);
+
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_gift, parent, false);
@@ -59,6 +64,13 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         giftDescription.setText(giftDTO.getDescription());
 
         Button button = (Button) convertView.findViewById(R.id.button);
+
+        if(!ownGift && giftDTO.isBought()){
+            button.setBackgroundColor(0xFFFF8B8D);
+        } else {
+            button.setBackgroundColor(0xFF99FF8B);
+        }
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,7 +93,11 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
                     }
 
                     try {
-                        giftService.updateGift(giftDTO);
+                        UpdateGiftTask updateGiftTask = new UpdateGiftTask();
+                        GiftDTO[] gifts = new GiftDTO[1];
+                        gifts[0] = giftDTO;
+                        updateGiftTask.execute(gifts);
+                        //giftService.updateGift(giftDTO);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -95,15 +111,18 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
     }
 
 
+
     //---------------------------------------------------------------------------------------------
     // -------------------------- ASYNC -----------------------------------------------------------
 
-    private class RemoveGiftTask extends AsyncTask<GiftDTO, Integer, Boolean> {
+    private class UpdateGiftTask extends AsyncTask<GiftDTO, Integer, Boolean> {
 
         @Override
         protected Boolean doInBackground(GiftDTO... giftDTO) {
             try {
-                giftService.removeGift(giftDTO[0]);
+                actionGift = giftDTO[0];
+                giftService.updateGift(actionGift);
+
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -114,10 +133,73 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
 
         @Override
         protected void onPostExecute(Boolean success) {
-           // findViewById(R.id.progressBar).setVisibility(View.GONE);
-            //enableButtons();
             if (success) {
-                notifyDataSetChanged();
+                Iterator it =  gifts.iterator();
+
+                while(it.hasNext()){
+                    GiftDTO gift = (GiftDTO)it.next();
+
+                    if(actionGift != null && gift.equals(actionGift)) {
+                        //it.remove();
+
+                        notifyDataSetChanged();
+                        actionGift = null;
+                    }
+                }
+                /*Intent intent = new Intent(context, GiftsActivity.class);
+                intent.putExtra(FriendListActivity.EXTRA_USERDTO, userDTO);
+                intent.putExtra(FriendListActivity.EXTRA_VIEWUSERDTO, userDTO);
+
+                context.startActivity(intent);*/
+            }
+            //else
+            //messageManager.show(getApplicationContext(), "Gift not saved!", false);*/
+
+            //startActivity(new Intent(AddItemActivity.this, MainActivity.class));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+            //disableButtons();
+        }
+    }
+
+    private class RemoveGiftTask extends AsyncTask<GiftDTO, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(GiftDTO... giftDTO) {
+            try {
+                actionGift = giftDTO[0];
+                giftService.removeGift(actionGift);
+
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                Iterator it =  gifts.iterator();
+
+                while(it.hasNext()){
+                    GiftDTO gift = (GiftDTO)it.next();
+
+                    if(actionGift != null && gift.equals(actionGift)) {
+                        it.remove();
+                        notifyDataSetChanged();
+                        actionGift = null;
+                    }
+                }
+                /*Intent intent = new Intent(context, GiftsActivity.class);
+                intent.putExtra(FriendListActivity.EXTRA_USERDTO, userDTO);
+                intent.putExtra(FriendListActivity.EXTRA_VIEWUSERDTO, userDTO);
+
+                context.startActivity(intent);*/
             }
             //else
                 //messageManager.show(getApplicationContext(), "Gift not saved!", false);*/
