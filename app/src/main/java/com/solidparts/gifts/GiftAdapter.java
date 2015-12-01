@@ -66,9 +66,9 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         Button button = (Button) convertView.findViewById(R.id.button);
 
         if(!ownGift && giftDTO.isBought()){
-            button.setBackgroundColor(0xFFFF8B8D);
+            button.setBackgroundColor(0xFFFF8B8D);// Red
         } else {
-            button.setBackgroundColor(0xFF99FF8B);
+            button.setBackgroundColor(0xFF99FF8B);// Green
         }
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +81,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
                     gifts[0] = giftDTO;
                     removeGiftTask.execute(gifts);
 
-                } else {
+                } else if(!giftDTO.isBought() || (giftDTO.isBought() && giftDTO.getBoughtById() == userDTO.getId())) {
                     // TODO - Toggle bought
 
                     if(giftDTO.isBought()){

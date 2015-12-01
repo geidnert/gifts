@@ -110,7 +110,6 @@ public class GiftDTO {
                 "cacheID=" + cacheID +
                 ", id=" + id +
                 ", userId=" + userId +
-                ", boughtById=" + boughtById +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", url='" + url + '\'' +

@@ -75,6 +75,7 @@ public class OnlineGiftDAO implements IGiftDAO {
             String description = jsonItem.getString("description");
             String url = jsonItem.getString("url");
             boolean bought = jsonItem.getInt("bought") == 1;
+            int boughtById = jsonItem.getInt("boughtById");
 
             byte[] image = Base64.decode(jsonItem.get("image").toString(), Base64.DEFAULT);
 
@@ -84,6 +85,7 @@ public class OnlineGiftDAO implements IGiftDAO {
             giftDTO.setName(name);
             giftDTO.setDescription(description);
             giftDTO.setBought(bought);
+            giftDTO.setBoughtById(boughtById);
             giftDTO.setImage(image);
             giftDTO.setUrl(url);
 
@@ -122,7 +124,7 @@ public class OnlineGiftDAO implements IGiftDAO {
         nameValuePairs.add(new BasicNameValuePair("description", giftDTO.getDescription()));
         nameValuePairs.add(new BasicNameValuePair("userId", ""+giftDTO.getUserId()));
         nameValuePairs.add(new BasicNameValuePair("url", giftDTO.getUrl()));
-        nameValuePairs.add(new BasicNameValuePair("bought", ""+giftDTO.isBought()));
+        nameValuePairs.add(new BasicNameValuePair("bought", ""+(giftDTO.isBought()?1:0)));
         nameValuePairs.add(new BasicNameValuePair("boughtById", ""+giftDTO.getBoughtById()));
         nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.DEFAULT)));
 
