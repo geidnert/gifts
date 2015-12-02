@@ -64,11 +64,11 @@ public class GiftsActivity extends ListActivity {
         search();
 
         if(!viewUserDTO.equals(userDTO)){
-            ((ImageView) findViewById(R.id.image)).setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.description)).setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.url)).setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.imageText)).setVisibility(View.GONE);
-            ((Button) findViewById(R.id.addGift)).setVisibility(View.GONE);
+            (findViewById(R.id.image)).setVisibility(View.GONE);
+            (findViewById(R.id.description)).setVisibility(View.GONE);
+            (findViewById(R.id.url)).setVisibility(View.GONE);
+            (findViewById(R.id.imageText)).setVisibility(View.GONE);
+            (findViewById(R.id.addGift)).setVisibility(View.GONE);
         }
     }
 
