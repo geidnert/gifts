@@ -56,9 +56,9 @@ public class OnlineUserDAO implements IUserDAO {
     }
 
     @Override
-    public List<UserDTO> getUsers(int groupId) throws IOException, JSONException {
+    public List<UserDTO> getUsers(String g) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add(new BasicNameValuePair("groupId", ""+groupId));
+        nameValuePairs.add(new BasicNameValuePair("groupname", ""+g));
 
         String request = networkDAO.request(NetworkDAO.GET_ALL_USERS, nameValuePairs);
 
@@ -73,7 +73,7 @@ public class OnlineUserDAO implements IUserDAO {
             String firstname = jsonUser.getString("firstname");
             String lastname = jsonUser.getString("lastname");
             String email = jsonUser.getString("email");
-            String group = jsonUser.getString("groupId");
+            String groupname = jsonUser.getString("groupname");
 
 
             //byte[] image = Base64.decode(jsonUser.get("image").toString(), Base64.DEFAULT);
@@ -84,7 +84,7 @@ public class OnlineUserDAO implements IUserDAO {
             userDTO.setEmail(email);
             userDTO.setFirstname(firstname);
             userDTO.setLastname(lastname);
-            userDTO.setGroup(group);
+            userDTO.setGroupName(groupname);
 
             allUsers.add(userDTO);
         }
@@ -111,7 +111,8 @@ public class OnlineUserDAO implements IUserDAO {
             String firstname = jsonUser.getString("firstname");
             String lastname = jsonUser.getString("lastname");
             String email = jsonUser.getString("email");
-            String groupId = jsonUser.getString("groupId");
+            String groupname = jsonUser.getString("groupname");
+            String password = jsonUser.getString("password");
 
 
             //byte[] image = Base64.decode(jsonUser.get("image").toString(), Base64.DEFAULT);
@@ -122,7 +123,8 @@ public class OnlineUserDAO implements IUserDAO {
             userDTO.setEmail(email);
             userDTO.setFirstname(firstname);
             userDTO.setLastname(lastname);
-            userDTO.setGroup(groupId);
+            userDTO.setGroupName(groupname);
+            userDTO.setPassword(password);
 
             allUsers.add(userDTO);
         }
@@ -137,10 +139,10 @@ public class OnlineUserDAO implements IUserDAO {
         nameValuePairs.add(new BasicNameValuePair("password", userDTO.getPassword()));
         nameValuePairs.add(new BasicNameValuePair("firstname", userDTO.getFirstname()));
         nameValuePairs.add(new BasicNameValuePair("lastname", userDTO.getLastname() + ""));
-        nameValuePairs.add(new BasicNameValuePair("group", userDTO.getGroup()));
+        nameValuePairs.add(new BasicNameValuePair("groupname", userDTO.getGroupName()));
         //nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(userDTO.getImage(), Base64.DEFAULT)));
 
-        String request = networkDAO.request(NetworkDAO.ADD, nameValuePairs);
+        String request = networkDAO.request(NetworkDAO.ADD_USER, nameValuePairs);
 
         userDTO.setId(Integer.parseInt(request.trim()));
         offlineUserDAO.updateUser(userDTO, sync);
@@ -158,7 +160,7 @@ public class OnlineUserDAO implements IUserDAO {
         nameValuePairs.add(new BasicNameValuePair("email", userDTO.getEmail()));
         nameValuePairs.add(new BasicNameValuePair("firstname", userDTO.getFirstname()));
         nameValuePairs.add(new BasicNameValuePair("lastname", userDTO.getLastname() + ""));
-        nameValuePairs.add(new BasicNameValuePair("group", userDTO.getGroup()));
+        nameValuePairs.add(new BasicNameValuePair("groupname", userDTO.getGroupName()));
         //nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(userDTO.getImage(), Base64.DEFAULT)));
 
         networkDAO.request(NetworkDAO.UPDATE, nameValuePairs);

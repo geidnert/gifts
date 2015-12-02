@@ -1,7 +1,13 @@
 package com.solidparts.gifts;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,14 +15,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.solidparts.gifts.dto.DataDTO;
 import com.solidparts.gifts.dto.UserDTO;
+import com.solidparts.gifts.service.GiftService;
+import com.solidparts.gifts.service.UserService;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    public final static int APP_VERSION = 1;
     public final static String EXTRA_USERDTO = "userDTO";
     public final static String EXTRA_VIEWUSERDTO = "viewUserDTO";
 
     private UserDTO userDTO;
+    private UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +37,14 @@ public class MainActivity extends ActionBarActivity {
 
         userDTO = (UserDTO) getIntent().getSerializableExtra("userDTO");
 
+        userService = new UserService(this);
+
         ((TextView) findViewById(R.id.msg)).setText("Welcome " + userDTO.getFirstname() + " to your gift organizer.");
+
+        // Sync data
+        String[] appArgs = new String[]{};
+        AppSyncTask appSyncTask = new AppSyncTask();
+        appSyncTask.execute(appArgs);
     }
 
     @Override
@@ -70,6 +89,73 @@ public class MainActivity extends ActionBarActivity {
         } catch (ActivityNotFoundException anfe) {
             //on catch, show the download dialog
             //showDialog(SearchActivity.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+        }
+    }
+
+
+    class AppSyncTask extends AsyncTask<String, DataDTO, DataDTO> {
+
+        @Override
+        protected DataDTO doInBackground(String... searchTerms) {
+            try {
+                return userService.getAppData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+
+        /**
+         * This method will be called when doInBackground completes.
+         * The paramter result is populated from the return values of doInBackground.
+         * This method runs on the UI thread, and therefore can update UI components.
+         */
+
+        @Override
+        protected void onPostExecute(DataDTO dataDTO) {
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
+            //showButtons();
+            if (dataDTO != null && APP_VERSION < dataDTO.getLatestAppVersion()) {
+                UpdateDialogFragment updateDialogFragment = new UpdateDialogFragment();
+                updateDialogFragment.show(getFragmentManager(), "updateDialog");
+            }
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+            //hideButtons();
+        }
+    }
+
+    public static class UpdateDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("New version of Gifts is available, please download it now!")
+                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String url = "http://solidparts.se/gifts/install/";
+                            Intent i = new Intent(Intent.ACTION_VIEW);
+                            i.setData(Uri.parse(url));
+                            startActivity(i);
+
+                            dialog.dismiss();
+                        }
+
+                    })
+                    .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                            dialog.dismiss();
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
         }
     }
 }

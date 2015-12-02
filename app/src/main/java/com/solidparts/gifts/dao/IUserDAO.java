@@ -21,7 +21,7 @@ public interface IUserDAO {
 
     public DataDTO getAppData() throws Exception;
 
-    public List<UserDTO> getUsers(int groupId) throws Exception;
+    public List<UserDTO> getUsers(String group) throws Exception;
 
     public UserDTO getUser(String email, String password) throws Exception;
 

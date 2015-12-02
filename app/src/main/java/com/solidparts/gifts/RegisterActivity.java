@@ -3,6 +3,7 @@ package com.solidparts.gifts;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,10 +15,13 @@ import com.solidparts.gifts.dto.UserDTO;
 import com.solidparts.gifts.service.GiftService;
 import com.solidparts.gifts.service.UserService;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends ActionBarActivity {
+    public final static String EXTRA_EMAIL = "email";
+    public final static String EXTRA_USERDTO = "userDTO";
 
     private UserService userService;
     private MessageManager messageManager;
+    private UserDTO user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +50,28 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    public void onCancel(View v) {
+        try {
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
+        } catch (ActivityNotFoundException anfe) {
+            //on catch, show the download dialog
+            //showDialog(SearchActivity.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+        }
+    }
+
     private UserDTO getUserDTO(){
         //String giftName = ((EditText) findViewById(R.id.giftName)).getText().toString();
-        String email = ((EditText) findViewById(R.id.email)).getText().toString();
+        String email = ((TextView) findViewById(R.id.email)).getText().toString();
         String firstName= ((EditText) findViewById(R.id.firstName)).getText().toString();
         String lastName = ((EditText) findViewById(R.id.lastName)).getText().toString();
         String password = ((EditText) findViewById(R.id.password)).getText().toString();
-        String group = ((EditText) findViewById(R.id.groupName)).getText().toString();
+        String groupname = ((EditText) findViewById(R.id.groupName)).getText().toString();
 
 
         if (email.equals("") || firstName.equals("") || lastName.equals("") || password.equals("") ||
-                group.equals("")) {
-            messageManager.show(getApplicationContext(), "ERROR: You need to fill in the complete form, generate a qr code and add a image!", false);
+                groupname.equals("")) {
+            messageManager.show(getApplicationContext(), "ERROR: You need to fill in the complete form!", false);
             return null;
         }
 
@@ -66,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
         userDTO.setFirstname(firstName);
         userDTO.setLastname(lastName);
         userDTO.setPassword(password);
-        userDTO.setGroup(group);
+        userDTO.setGroupName(groupname);
 
         return userDTO;
     }
@@ -91,9 +105,24 @@ public class RegisterActivity extends AppCompatActivity {
             //enableButtons();
             if (success) {
                 messageManager.show(getApplicationContext(), "User Saved!", false);
-                //SearchGiftTask searchGiftTask = new SearchGiftTask();
+                try {
+                    // Simulate network access.
+                    //user = userService.getUser(getUserDTO().getEmail(), getUserDTO().getPassword());
+                    UserLoginTask mAuthTask = new UserLoginTask(getUserDTO().getEmail(), getUserDTO().getPassword());
+                    mAuthTask.execute((Void) null);
 
-                //searchGiftTask.execute(new String[]{""+userDTO.getId()});
+                } catch (Exception e) {
+
+                }
+
+                if(user != null) {
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    intent.putExtra(EXTRA_EMAIL, user);
+                    startActivity(intent);
+                } else {
+
+                }
+
             }
             else
                 messageManager.show(getApplicationContext(), "User not saved!", false);
@@ -105,6 +134,68 @@ public class RegisterActivity extends AppCompatActivity {
         protected void onPreExecute() {
             findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
             //disableButtons();
+        }
+
+
+
+
+        public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+            private final String mEmail;
+            private final String mPassword;
+
+            UserLoginTask(String email, String password) {
+                mEmail = email;
+                mPassword = password;
+            }
+
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                // TODO: attempt authentication against a network service.
+
+
+                try {
+                    // Simulate network access.
+                    user = userService.getUser(mEmail, mPassword);
+
+                } catch (Exception e) {
+                    return false;
+                }
+
+                if(user != null) {
+                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                    intent.putExtra(EXTRA_USERDTO, user);
+                    startActivity(intent);
+                } else {
+                    return false;
+                }
+
+            /*for (String credential : DUMMY_CREDENTIALS) {
+                String[] pieces = credential.split(":");
+                if (pieces[0].equals(mEmail)) {
+                    // Account exists, return true if the password matches.
+                    return pieces[1].equals(mPassword);
+                }
+            }*/
+
+                // TODO: register the new account here.
+                return true;
+            }
+
+            @Override
+            protected void onPostExecute(final Boolean success) {
+                //mAuthTask = null;
+                //showProgress(false);
+
+                if (success) {
+                    finish();
+                } else {
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+
+
         }
     }
 }

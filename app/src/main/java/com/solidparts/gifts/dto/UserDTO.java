@@ -12,7 +12,7 @@ public class UserDTO implements Serializable {
     String firstname;
     String lastname;
     String password;
-    String group;
+    String groupname;
 
     public long getCacheID() {
         return cacheID;
@@ -54,12 +54,12 @@ public class UserDTO implements Serializable {
         this.lastname = lastname;
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupName() {
+        return groupname;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupName(String groupname) {
+        this.groupname = groupname;
     }
 
     public String getPassword() {
@@ -95,7 +95,7 @@ public class UserDTO implements Serializable {
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", password='" + password + '\'' +
-                ", group='" + group + '\'' +
+                ", groupname='" + groupname + '\'' +
                 '}';
     }
 }

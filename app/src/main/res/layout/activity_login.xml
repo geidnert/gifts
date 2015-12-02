@@ -17,9 +17,11 @@
         <LinearLayout android:id="@+id/email_login_form" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:orientation="vertical">
 
-            <AutoCompleteTextView android:id="@+id/password" android:layout_width="match_parent"
+            <AutoCompleteTextView android:id="@+id/email" android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:hint="@string/prompt_email"
                 android:inputType="textEmailAddress" android:maxLines="1"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
                 android:singleLine="true" />
 
             <EditText android:id="@+id/password" android:layout_width="match_parent"
@@ -27,11 +29,15 @@
                 android:imeActionId="@+id/login"
                 android:imeActionLabel="@string/action_sign_in_short"
                 android:imeOptions="actionUnspecified" android:inputType="textPassword"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
                 android:maxLines="1" android:singleLine="true" />
 
             <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in"
+                android:textSize="20dp"
+                android:layout_height="60dp"
                 android:textStyle="bold" />
 
         </LinearLayout>

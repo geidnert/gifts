@@ -17,6 +17,7 @@ import java.util.ArrayList;
  */
 public class NetworkDAO implements INetworkDAO{
     public static final String ADD = "add.php";
+    public static final String ADD_USER = "addUser.php";
     public static final String UPDATE = "update.php";
     public static final String REMOVE = "remove.php";
     public static final String SEARCH = "get.php";

@@ -38,6 +38,7 @@ import java.util.List;
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     public final static String EXTRA_EMAIL = "email";
+    public final static String EXTRA_USERDTO = "userDTO";
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -69,7 +70,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         userService = new UserService(this);
 
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.password);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -280,9 +281,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 return false;
             }
 
-            if(user != null) {
+            if(user != null && mPassword.equals(user.getPassword())) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra(EXTRA_EMAIL, user);
+                intent.putExtra(EXTRA_USERDTO, user);
                 startActivity(intent);
             } else {
                 return false;
@@ -308,12 +309,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 finish();
             } else {
-                //mPasswordView.setError(getString(R.string.error_incorrect_password));
-                //mPasswordView.requestFocus();
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                String email = mEmailView.getText().toString();
-                intent.putExtra(EXTRA_EMAIL, email);
-                startActivity(intent);
+
+                if(user == null) {
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                    String email = mEmailView.getText().toString();
+                    intent.putExtra(EXTRA_EMAIL, email);
+                    startActivity(intent);
+                } else {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                }
             }
         }
 

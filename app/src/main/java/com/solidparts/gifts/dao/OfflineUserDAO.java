@@ -22,7 +22,7 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
     public static final String USER = "user";
     public static final String ID = "id";
     public static final String CACHE_ID = "cache_id";
-    public static final String GROUP = "group";
+    public static final String GROUPNAME = "groupname";
     public static final String EMAIL = "email";
     public static final String FIRSTNAME = "firstname";
     public static final String LASTNAME = "lastname";
@@ -41,7 +41,7 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createItems = "CREATE TABLE " + USER + " ( " + CACHE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ID + " INTEGER, " + EMAIL + " TEXT, " + FIRSTNAME + " TEXT, " + LASTNAME + " TEXT, " + GROUP + " TEXT );";
+                ID + " INTEGER, " + EMAIL + " TEXT, " + FIRSTNAME + " TEXT, " + LASTNAME + " TEXT, " + GROUPNAME + " TEXT );";
 
         db.execSQL(createItems);
     }
@@ -51,15 +51,15 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
         db.execSQL("DROP TABLE IF EXISTS " + USER);
 
         String createItems = "CREATE TABLE " + USER + " ( " + CACHE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                ID + " INTEGER, " + EMAIL + " TEXT, " + FIRSTNAME + " TEXT, " + LASTNAME + " TEXT, " + GROUP + " TEXT );";
+                ID + " INTEGER, " + EMAIL + " TEXT, " + FIRSTNAME + " TEXT, " + LASTNAME + " TEXT, " + GROUPNAME + " TEXT );";
 
         db.execSQL(createItems);
     }
 
     @Override
-    public List<UserDTO> getUsers(int groupId) throws IOException, JSONException {
+    public List<UserDTO> getUsers(String group) throws IOException, JSONException {
 
-        String query = "Select * FROM " + USER + " WHERE " + GROUP + " LIKE  \"%" + groupId + "%\" AND " + SYNCED + " < 2";
+        String query = "Select * FROM " + USER + " WHERE " + GROUPNAME + " LIKE  \"%" + group + "%\" AND " + SYNCED + " < 2";
 
         List<UserDTO> searchResultList = getUserDTOs(query);
         return searchResultList;
@@ -114,7 +114,7 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
         cv.put(EMAIL, userDTO.getEmail());
         cv.put(FIRSTNAME, userDTO.getFirstname());
         cv.put(LASTNAME, userDTO.getLastname());
-        cv.put(GROUP, userDTO.getGroup());
+        cv.put(GROUPNAME, userDTO.getGroupName());
 
 
 
@@ -132,7 +132,7 @@ public class OfflineUserDAO extends SQLiteOpenHelper implements IUserDAO {
         cv.put(EMAIL, userDTO.getEmail());
         cv.put(FIRSTNAME, userDTO.getFirstname());
         cv.put(LASTNAME, userDTO.getLastname());
-        cv.put(GROUP, userDTO.getGroup());
+        cv.put(GROUPNAME, userDTO.getGroupName());
 
         String where = "onlineid=?";
 

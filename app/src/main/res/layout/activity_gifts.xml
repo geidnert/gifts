@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userName"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:hint="User name"
         android:layout_marginBottom="20dp" />
 
@@ -37,14 +37,15 @@
 
     <Button
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:text="Add/ Update"
         android:id="@+id/addGift"
         android:background="#99ff8b"
         android:onClick="onAddGift"
         android:layout_below="@+id/url"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textSize="20dp" />
     <!--ListView
         android:id="@+id/android:list"
         android:layout_width="fill_parent"
@@ -59,12 +60,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="4dp" />
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_centerHorizontal="true" />
-
     <EditText
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -75,19 +70,28 @@
         android:layout_alignTop="@+id/image"
         android:layout_toRightOf="@+id/image"
         android:layout_toEndOf="@+id/image"
-        android:textSize="12dp"
+        android:textSize="20dp"
         android:layout_marginLeft="4dp" />
 
     <EditText
         android:layout_width="fill_parent"
-        android:layout_height="33dp"
+        android:layout_height="42dp"
         android:id="@+id/url"
         android:hint="Link to gift"
         android:layout_below="@+id/image"
         android:layout_alignRight="@+id/description"
         android:layout_alignEnd="@+id/description"
-        android:textSize="12dp"
+        android:textSize="20dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" />
 
 </RelativeLayout>

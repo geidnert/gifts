@@ -45,7 +45,7 @@ public class FriendListActivity extends ListActivity {
 
         SearchUserTask searchUserTask = new SearchUserTask();
 
-        searchUserTask.execute(new String[]{"" + userDTO.getGroup()});
+        searchUserTask.execute(new String[]{"" + userDTO.getGroupName()});
     }
 
     @Override
@@ -78,7 +78,7 @@ public class FriendListActivity extends ListActivity {
         @Override
         protected List<UserDTO> doInBackground(String... searchTerms) {
             try {
-                return userService.getUsers(Integer.parseInt(searchTerms[0]));
+                return userService.getUsers(searchTerms[0]);
             } catch (Exception e) {
                 e.printStackTrace();
             }
