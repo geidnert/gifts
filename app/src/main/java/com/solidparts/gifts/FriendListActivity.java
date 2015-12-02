@@ -13,10 +13,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.solidparts.gifts.dto.GiftDTO;
 import com.solidparts.gifts.dto.UserDTO;
 import com.solidparts.gifts.service.UserService;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class FriendListActivity extends ListActivity {
@@ -97,9 +99,16 @@ public class FriendListActivity extends ListActivity {
             if (allUsers != null && allUsers.size() > 0) {
 
                 List<String> allUserNames = new ArrayList<>(allUsers.size());
+                Iterator it = allUsers.iterator();
+                while (it.hasNext()) {
+                    UserDTO uDTO = (UserDTO) it.next();
 
-                for (UserDTO userDAO : allUsers) {
-                    allUserNames.add(userDAO.getFirstname() + " " + userDAO.getLastname());
+                    if(userDTO.getId() == uDTO.getId()) {
+                        it.remove();
+                    } else {
+                        allUserNames.add(uDTO.getFirstname() + " " + uDTO.getLastname());
+                    }
+
                 }
 
                 ArrayAdapter<String> itemAdaptor = new ArrayAdapter<String>(FriendListActivity.this, android.R.layout.simple_list_item_1, allUserNames);
