@@ -1,8 +1,10 @@
 package com.solidparts.gifts;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +39,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
 
         this.gifts = gifts;
         this.context = context;
-        this.giftActivity = giftActivity;
+        this.giftActivity = giftsActivity;
         this.ownGift = ownGift;
         this.userDTO = userDTO;
         this.giftService = giftService;
@@ -70,6 +72,24 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         } else {
             button.setBackgroundColor(0xFF99FF8B);// Green
         }
+
+
+
+
+        giftDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ownGift) {
+                    giftActivity.update(giftDTO);
+                } else {
+                    if(giftDTO.getUrl() != null && !giftDTO.getUrl().equals("")) {
+                        Uri uri = Uri.parse(giftDTO.getUrl()); // missing 'http://' will cause crashed
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        context.startActivity(intent);
+                    }
+                }
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -6,15 +6,19 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.solidparts.gifts.GiftsActivity">
 
-    <TextView android:text="@string/userName" android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userName"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:hint="User name"
+        android:layout_marginBottom="20dp" />
 
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/image"
+        android:hint="Gift Image"
         android:layout_below="@+id/userName"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -22,16 +26,25 @@
         android:background="#e9e9e9"
         android:onClick="onTakePhoto" />
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Image"
+        android:id="@+id/imageText"
+        android:layout_above="@+id/description"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Add"
+        android:text="Add/ Update"
         android:id="@+id/addGift"
         android:background="#99ff8b"
-        android:layout_below="@+id/description"
-        android:layout_toRightOf="@+id/url"
-        android:layout_toEndOf="@+id/url"
-        android:onClick="onAddGift" />
+        android:onClick="onAddGift"
+        android:layout_below="@+id/url"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
     <!--ListView
         android:id="@+id/android:list"
         android:layout_width="fill_parent"
@@ -53,26 +66,28 @@
         android:layout_centerHorizontal="true" />
 
     <EditText
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/url"
-        android:textSize="12dp"
-        android:layout_below="@+id/image"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:text="www.solidparts.se" />
-
-    <EditText
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:inputType="textMultiLine"
         android:ems="10"
+        android:hint="Gift description"
         android:id="@+id/description"
         android:layout_alignTop="@+id/image"
         android:layout_toRightOf="@+id/image"
         android:layout_toEndOf="@+id/image"
-        android:text="Add description and then i can go home and then i will go away because i want to"
         android:textSize="12dp"
         android:layout_marginLeft="4dp" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="33dp"
+        android:id="@+id/url"
+        android:hint="Link to gift"
+        android:layout_below="@+id/image"
+        android:layout_alignRight="@+id/description"
+        android:layout_alignEnd="@+id/description"
+        android:textSize="12dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
 </RelativeLayout>

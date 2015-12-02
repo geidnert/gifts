@@ -2,6 +2,7 @@ package com.solidparts.gifts;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -25,6 +26,7 @@ import com.solidparts.gifts.service.GiftService;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -38,6 +40,9 @@ public class GiftsActivity extends ListActivity {
     private MessageManager messageManager;
     private ImageView giftImage;
     private static SearchGiftTask searchGiftTask;
+    private boolean update = false;
+    GiftDTO updateGiftDTO = null;
+    List<GiftDTO> allUserGifts = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +55,20 @@ public class GiftsActivity extends ListActivity {
         messageManager = new MessageManager();
         giftImage = ((ImageView) findViewById(R.id.image));
 
-        ((TextView) findViewById(R.id.userName)).setText(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
+        if(viewUserDTO.getId() == userDTO.getId()){
+            ((TextView) findViewById(R.id.userName)).setText("My gifts");
+        } else {
+            ((TextView) findViewById(R.id.userName)).setText(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
+        }
         searchGiftTask = new SearchGiftTask();
         search();
 
         if(!viewUserDTO.equals(userDTO)){
-            ((ImageView) findViewById(R.id.image)).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.description)).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.url)).setVisibility(View.INVISIBLE);
-            ((Button) findViewById(R.id.addGift)).setVisibility(View.INVISIBLE);
+            ((ImageView) findViewById(R.id.image)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.description)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.url)).setVisibility(View.GONE);
+            ((TextView) findViewById(R.id.imageText)).setVisibility(View.GONE);
+            ((Button) findViewById(R.id.addGift)).setVisibility(View.GONE);
         }
     }
 
@@ -91,22 +101,59 @@ public class GiftsActivity extends ListActivity {
             return;
         }
 
-        /*if (update) {
-            ItemUpdateTask itemUpdateTask = new ItemUpdateTask();
-            ItemDTO[] items = new ItemDTO[1];
-            items[0] = itemDTO;
-            itemUpdateTask.execute(items);
-        } else {*/
+        if (update) {
+            UpdateGiftTask updateGiftTask = new UpdateGiftTask();
+
+            giftDTO.setBoughtById(updateGiftDTO.getBoughtById());
+            giftDTO.setBought(updateGiftDTO.isBought());
+            giftDTO.setId(updateGiftDTO.getId());
+
+            GiftDTO[] giftDTOs = new GiftDTO[1];
+            giftDTOs[0] = giftDTO;
+            updateGiftTask.execute(giftDTOs);
+        } else {
             AddGiftTask addGiftTask = new AddGiftTask();
             GiftDTO[] gifts = new GiftDTO[1];
         gifts[0] = giftDTO;
             addGiftTask.execute(gifts);
-        //}
+        }
     }
 
     public void onTakePhoto(View view) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA_REQUEST);
+    }
+
+    public void update(GiftDTO giftDTO){
+        updateGiftDTO = giftDTO;
+        // Lookup view for data population
+        update = true;
+        ImageView giftImage = (ImageView) findViewById(R.id.image);
+        TextView giftDescription = (TextView) findViewById(R.id.description);
+        TextView giftUrl = (TextView) findViewById(R.id.url);
+        // Populate the data into the template view using the data object
+
+        Bitmap bitmap = BitmapFactory.decodeByteArray(giftDTO.getImage(), 0,
+                giftDTO.getImage().length);
+
+
+        giftImage.setImageBitmap(bitmap);
+        CommonResources.cameraBmp = bitmap;
+        giftDescription.setText(giftDTO.getDescription());
+        giftUrl.setText(giftDTO.getUrl());
+
+    }
+
+    private void clearInputFields(){
+        ImageView giftImage = (ImageView) findViewById(R.id.image);
+        TextView giftDescription = (TextView) findViewById(R.id.description);
+        TextView giftUrl = (TextView) findViewById(R.id.url);
+
+        giftImage.setImageBitmap(null);
+        CommonResources.cameraBmp = null;
+        giftDescription.setText("");
+        giftUrl.setText("");
+
     }
 
     @Override
@@ -160,22 +207,15 @@ public class GiftsActivity extends ListActivity {
         }
 
         GiftDTO giftDTO = new GiftDTO();
-        //giftDTO.setName(name);
         giftDTO.setDescription(giftDescription);
         giftDTO.setUrl(giftUrl);
         giftDTO.setUserId(userDTO.getId());
-        //itemDTO.setCacheID(cacheId);
-        //itemDTO.setOnlineid(intentItemDTO != null ? intentItemDTO.getOnlineid() : -1);
 
         ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
-        //ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
-
         CommonResources.cameraBmp.compress(Bitmap.CompressFormat.JPEG, 100, bos1);
-
         byte[] itemImg = bos1.toByteArray();
-
-
         giftDTO.setImage(itemImg);
+
 
         return giftDTO;
     }
@@ -220,6 +260,44 @@ public class GiftsActivity extends ListActivity {
         }
     }
 
+    private class UpdateGiftTask extends AsyncTask<GiftDTO, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(GiftDTO... giftDTO) {
+            try {
+                giftService.updateGift(giftDTO[0]);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
+            //enableButtons();
+            if (success) {
+                messageManager.show(getApplicationContext(), "Gift Saved!", false);
+                SearchGiftTask searchGiftTask = new SearchGiftTask();
+
+                searchGiftTask.execute(new String[]{""+userDTO.getId()});
+                clearInputFields();
+            }
+            else
+                messageManager.show(getApplicationContext(), "Gift not saved!", false);
+
+            //startActivity(new Intent(AddItemActivity.this, MainActivity.class));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+            //disableButtons();
+        }
+    }
+
     class SearchGiftTask extends AsyncTask<String, Integer, List<GiftDTO>> {
 
         @Override
@@ -242,6 +320,9 @@ public class GiftsActivity extends ListActivity {
         @Override
         protected void onPostExecute(final List<GiftDTO> allGifts) {
             findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+            allUserGifts = allGifts;
+
             // adapt the search results returned from doInBackground so that they can be presented on the UI.
             if (allGifts != null && allGifts.size() > 0) {
 
