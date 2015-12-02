@@ -11,6 +11,7 @@ public class UserDTO implements Serializable {
     String email;
     String firstname;
     String lastname;
+    String password;
     String group;
 
     public long getCacheID() {
@@ -61,6 +62,14 @@ public class UserDTO implements Serializable {
         this.group = group;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,6 +94,7 @@ public class UserDTO implements Serializable {
                 ", email='" + email + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
+                ", password='" + password + '\'' +
                 ", group='" + group + '\'' +
                 '}';
     }

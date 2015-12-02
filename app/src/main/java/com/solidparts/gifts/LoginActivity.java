@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -38,7 +37,7 @@ import java.util.List;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
-    public final static String EXTRA_USERDTO = "userDTO";
+    public final static String EXTRA_EMAIL = "email";
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -60,6 +59,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private UserService userService;
 
+    private UserDTO user = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +69,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         userService = new UserService(this);
 
         // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mEmailView = (AutoCompleteTextView) findViewById(R.id.password);
         populateAutoComplete();
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -269,7 +270,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-            UserDTO user = null;
+
 
             try {
                 // Simulate network access.
@@ -281,7 +282,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
             if(user != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra(EXTRA_USERDTO, user);
+                intent.putExtra(EXTRA_EMAIL, user);
                 startActivity(intent);
             } else {
                 return false;
@@ -307,8 +308,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 finish();
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                //mPasswordView.setError(getString(R.string.error_incorrect_password));
+                //mPasswordView.requestFocus();
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                String email = mEmailView.getText().toString();
+                intent.putExtra(EXTRA_EMAIL, email);
+                startActivity(intent);
             }
         }
 
