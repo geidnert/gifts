@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -66,11 +67,19 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         giftDescription.setText(giftDTO.getDescription());
 
         Button button = (Button) convertView.findViewById(R.id.button);
+        ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.imageButton);
 
         if(!ownGift && giftDTO.isBought()){
             button.setBackgroundColor(0xFFFF8B8D);// Red
-        } else {
+            button.setVisibility((View.VISIBLE));
+            imageButton.setVisibility((View.GONE));
+        } else if(!ownGift && !giftDTO.isBought()) {
             button.setBackgroundColor(0xFF99FF8B);// Green
+            button.setVisibility((View.VISIBLE));
+            imageButton.setVisibility((View.GONE));
+        } else {
+            imageButton.setVisibility((View.VISIBLE));
+            button.setVisibility((View.GONE));
         }
 
 
@@ -91,7 +100,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(ownGift){
@@ -101,7 +110,14 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
                     gifts[0] = giftDTO;
                     removeGiftTask.execute(gifts);
 
-                } else if(!giftDTO.isBought() || (giftDTO.isBought() && giftDTO.getBoughtById() == userDTO.getId())) {
+                }
+            }
+        });
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!giftDTO.isBought() || (giftDTO.isBought() && giftDTO.getBoughtById() == userDTO.getId())) {
                     // TODO - Toggle bought
 
                     if(giftDTO.isBought()){

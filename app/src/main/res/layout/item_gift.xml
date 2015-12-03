@@ -3,7 +3,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="fill_parent"
 android:layout_height="fill_parent"
-android:orientation="horizontal" >
+android:orientation="horizontal">
+
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imageButton"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:src="@mipmap/trash"
+        android:alpha="100"
+        android:visibility="visible"
+        android:backgroundTint="#00ffffff" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -11,7 +22,9 @@ android:orientation="horizontal" >
         android:layout_height="wrap_content"
         android:id="@+id/button"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="5dp"
+        android:elegantTextHeight="false"
+        android:visibility="gone" />
 
     <ImageView
     android:id="@+id/giftImage"

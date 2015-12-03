@@ -202,7 +202,7 @@ public class GiftsActivity extends ListActivity {
         String giftUrl = ((EditText) findViewById(R.id.url)).getText().toString();
 
         if (giftDescription.equals("")) {
-            messageManager.show(getApplicationContext(), "ERROR: You need to fill in the complete form, generate a qr code and add a image!", false);
+            messageManager.show(getApplicationContext(), "ERROR: You need to type description!", false);
             return null;
         }
 
@@ -211,10 +211,12 @@ public class GiftsActivity extends ListActivity {
         giftDTO.setUrl(giftUrl);
         giftDTO.setUserId(userDTO.getId());
 
-        ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
-        CommonResources.cameraBmp.compress(Bitmap.CompressFormat.JPEG, 100, bos1);
-        byte[] itemImg = bos1.toByteArray();
-        giftDTO.setImage(itemImg);
+        if(CommonResources.cameraBmp != null) {
+            ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
+            CommonResources.cameraBmp.compress(Bitmap.CompressFormat.JPEG, 100, bos1);
+            byte[] itemImg = bos1.toByteArray();
+            giftDTO.setImage(itemImg);
+        }
 
 
         return giftDTO;
@@ -378,7 +380,8 @@ public class GiftsActivity extends ListActivity {
 
                 });
             } else {
-                messageManager.show(getApplicationContext(), "Did not find any matches!", false);
+                messageManager.show(getApplicationContext(), "Did not find any gifts for " +
+                        viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "!", false);
             }
         }
 
