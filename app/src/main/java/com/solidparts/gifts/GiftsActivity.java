@@ -11,8 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -114,9 +112,15 @@ public class GiftsActivity extends ListActivity {
         } else {
             AddGiftTask addGiftTask = new AddGiftTask();
             GiftDTO[] gifts = new GiftDTO[1];
-        gifts[0] = giftDTO;
+            gifts[0] = giftDTO;
             addGiftTask.execute(gifts);
         }
+
+        clearInputFields();
+
+        ImageView img= (ImageView) findViewById(R.id.image);
+        img.setImageResource(R.mipmap.camera);
+
     }
 
     public void onTakePhoto(View view) {
@@ -181,12 +185,23 @@ public class GiftsActivity extends ListActivity {
         }
     }
 
-
-
     public static void search(){
             searchGiftTask.execute(new String[]{"" + viewUserDTO.getId()});
     }
 
+    public void onShowImage(Bitmap image) {
+        (findViewById(R.id.addGift)).setVisibility(View.GONE);
+        ((ImageView) findViewById(R.id.fullImage)).setImageBitmap(image);
+        (findViewById(R.id.fullImage)).setVisibility(View.VISIBLE);
+    }
+
+    public void onHideImage(View view) {
+        if(viewUserDTO.getId() == userDTO.getId()) {
+            (findViewById(R.id.addGift)).setVisibility(View.VISIBLE);
+        }
+
+        (findViewById(R.id.fullImage)).setVisibility(View.GONE);
+    }
 
     //---------------------------------------------------------------------------------------------
     // -------------------------- PRIVATE -----------------------------------------------------------

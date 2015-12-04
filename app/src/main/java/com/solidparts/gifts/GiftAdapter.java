@@ -60,30 +60,34 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         TextView giftDescription = (TextView) convertView.findViewById(R.id.giftDescription);
         // Populate the data into the template view using the data object
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(giftDTO.getImage(), 0,
+        final Bitmap bitmap = BitmapFactory.decodeByteArray(giftDTO.getImage(), 0,
                 giftDTO.getImage().length);
 
         giftImage.setImageBitmap(bitmap);
         giftDescription.setText(giftDTO.getDescription());
 
-        Button button = (Button) convertView.findViewById(R.id.button);
+        ImageButton imageButton2 = (ImageButton) convertView.findViewById(R.id.imageButton2);
         ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.imageButton);
 
         if(!ownGift && giftDTO.isBought()){
-            button.setBackgroundColor(0xFFFF8B8D);// Red
-            button.setVisibility((View.VISIBLE));
+            imageButton2.setBackgroundColor(0xFFFF8B8D);// Red
+            imageButton2.setVisibility((View.VISIBLE));
             imageButton.setVisibility((View.GONE));
         } else if(!ownGift && !giftDTO.isBought()) {
-            button.setBackgroundColor(0xFF99FF8B);// Green
-            button.setVisibility((View.VISIBLE));
+            imageButton2.setBackgroundColor(0xFF99FF8B);// Green
+            imageButton2.setVisibility((View.VISIBLE));
             imageButton.setVisibility((View.GONE));
         } else {
             imageButton.setVisibility((View.VISIBLE));
-            button.setVisibility((View.GONE));
+            imageButton2.setVisibility((View.GONE));
         }
 
-
-
+        giftImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                giftActivity.onShowImage(bitmap);
+            }
+        });
 
         giftDescription.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,13 +118,13 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+        imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!giftDTO.isBought() || (giftDTO.isBought() && giftDTO.getBoughtById() == userDTO.getId())) {
+                if (!giftDTO.isBought() || (giftDTO.isBought() && giftDTO.getBoughtById() == userDTO.getId())) {
                     // TODO - Toggle bought
 
-                    if(giftDTO.isBought()){
+                    if (giftDTO.isBought()) {
                         giftDTO.setBought(false);
                         giftDTO.setBoughtById(0);
                     } else {

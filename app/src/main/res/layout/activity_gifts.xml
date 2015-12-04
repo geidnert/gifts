@@ -96,4 +96,14 @@
         android:layout_centerHorizontal="true"
         android:visibility="gone" />
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/fullImage"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:onClick="onHideImage"
+        android:nestedScrollingEnabled="true" />
+
 </RelativeLayout>

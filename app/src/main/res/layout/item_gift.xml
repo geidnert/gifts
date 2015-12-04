@@ -8,23 +8,24 @@ android:orientation="horizontal">
     <ImageButton
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:id="@+id/imageButton"
+        android:id="@+id/imageButton2"
+        android:src="@mipmap/gift"
+        android:visibility="gone"
         android:layout_marginTop="10dp"
+        android:background="#75af5b5b"
+        android:layout_marginRight="5dp" />
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        android:id="@+id/imageButton"
+        android:layout_marginTop="8dp"
         android:layout_marginLeft="5dp"
         android:src="@mipmap/trash"
         android:alpha="100"
         android:visibility="visible"
-        android:backgroundTint="#00ffffff" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:elegantTextHeight="false"
-        android:visibility="gone" />
+        android:backgroundTint="#00ffffff"
+        android:layout_marginRight="5dp" />
 
     <ImageView
     android:id="@+id/giftImage"
@@ -47,8 +48,8 @@ android:orientation="horizontal">
     android:layout_height="50dp"
     android:textSize="17dp"
     android:paddingTop="5dp"
-    android:text="Girft description bla bla blab la alb lab l bal blab l"
-    android:singleLine="false"
-        android:layout_marginTop="2dp" />
+        android:singleLine="false"
+        android:layout_marginTop="10dp"
+        android:hint="Gift description" />
 
 </LinearLayout>
