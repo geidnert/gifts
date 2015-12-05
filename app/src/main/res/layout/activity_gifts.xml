@@ -22,9 +22,9 @@
         android:hint="Gift Image"
         android:onClick="onTakePhoto"
         android:src="@mipmap/camera"
-        android:layout_below="@+id/userName"
-        android:layout_toRightOf="@+id/progressBar"
-        android:layout_toEndOf="@+id/progressBar" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="150dp"
