@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,7 +37,7 @@ import java.util.List;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<Cursor> {
     public final static String EXTRA_EMAIL = "email";
     public final static String EXTRA_USERDTO = "userDTO";
 
@@ -62,12 +63,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     private UserDTO user = null;
 
+    private MessageManager messageManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("Gifts Organizer v" + this.getResources().getInteger(R.integer.app_major_version) + "." + this.getResources().getInteger(R.integer.app_minor_version));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         userService = new UserService(this);
+        messageManager = new MessageManager();
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -148,6 +153,15 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+
+            messageManager = new MessageManager();
+            if (!userService.isNetworkAvaliable(LoginActivity.this)) {
+                messageManager.show(LoginActivity.this, "No network connection available!", true);
+                return;
+            }
+
+
+
             showProgress(true);
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
@@ -271,12 +285,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
-
             try {
                 // Simulate network access.
-                user = userService.getUser(mEmail, mPassword);
-
+                // Check network status
+                user = userService.getUser(mEmail.trim(), mPassword.trim());
             } catch (Exception e) {
                 return false;
             }

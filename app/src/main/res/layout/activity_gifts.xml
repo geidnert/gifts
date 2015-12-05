@@ -12,33 +12,22 @@
         android:id="@+id/userName"
         android:textSize="25dp"
         android:hint="User name"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="5dp"
+        android:visibility="gone" />
 
     <ImageView
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:id="@+id/image"
         android:hint="Gift Image"
         android:onClick="onTakePhoto"
         android:src="@mipmap/camera"
-        android:layout_below="@+id/imageText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Add new gift"
-        android:id="@+id/imageText"
         android:layout_below="@+id/userName"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:lines="1"
-        android:maxHeight="20dp"
-        android:maxLines="1" />
+        android:layout_toRightOf="@+id/progressBar"
+        android:layout_toEndOf="@+id/progressBar" />
 
     <Button
-        android:layout_width="fill_parent"
+        android:layout_width="150dp"
         android:layout_height="60dp"
         android:text="Add/ Update"
         android:id="@+id/addGift"
@@ -60,11 +49,12 @@
 
         android:layout_below="@+id/addGift"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="10dp"
+        android:paddingTop="0dp" />
 
     <EditText
         android:layout_width="fill_parent"
-        android:layout_height="50dp"
+        android:layout_height="70dp"
         android:inputType="textMultiLine"
         android:ems="10"
         android:hint="Gift description"
@@ -80,12 +70,10 @@
         android:layout_height="42dp"
         android:id="@+id/url"
         android:hint="Link to gift"
-        android:layout_below="@+id/image"
-        android:layout_alignRight="@+id/description"
-        android:layout_alignEnd="@+id/description"
         android:textSize="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp" />
+        android:layout_below="@+id/description"
+        android:layout_alignRight="@+id/clearGift"
+        android:layout_alignEnd="@+id/clearGift" />
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
@@ -105,5 +93,17 @@
         android:visibility="gone"
         android:onClick="onHideImage"
         android:nestedScrollingEnabled="true" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:text="Clear Gift"
+        android:id="@+id/clearGift"
+        android:layout_below="@+id/url"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="20dp"
+        android:background="#ff8b8d"
+        android:onClick="onClearGift" />
 
 </RelativeLayout>

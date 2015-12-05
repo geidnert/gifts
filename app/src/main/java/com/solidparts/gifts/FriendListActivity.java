@@ -4,6 +4,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class FriendListActivity extends ListActivity {
+public class FriendListActivity extends ActionBarActivity {
     public final static String EXTRA_USERDTO = "userDTO";
     public final static String EXTRA_VIEWUSERDTO = "viewUserDTO";
 
@@ -33,6 +34,7 @@ public class FriendListActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("Friends");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
 

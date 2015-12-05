@@ -7,13 +7,17 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.app.ListActivity;
 import android.widget.Toast;
@@ -28,7 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class GiftsActivity extends ListActivity {
+public class GiftsActivity extends ActionBarActivity {
     public static final int CAMERA_REQUEST = 1;
     public static final int IMAGE_GALLERY_REQUEST = 2;
 
@@ -54,9 +58,11 @@ public class GiftsActivity extends ListActivity {
         giftImage = ((ImageView) findViewById(R.id.image));
 
         if(viewUserDTO.getId() == userDTO.getId()){
-            ((TextView) findViewById(R.id.userName)).setText("My gifts");
+            setTitle("My gifts");
+            //((TextView) findViewById(R.id.userName)).setText("My gifts");
         } else {
-            ((TextView) findViewById(R.id.userName)).setText(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
+            setTitle(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
+            //((TextView) findViewById(R.id.userName)).setText(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
         }
         searchGiftTask = new SearchGiftTask();
         search();
@@ -65,8 +71,14 @@ public class GiftsActivity extends ListActivity {
             (findViewById(R.id.image)).setVisibility(View.GONE);
             (findViewById(R.id.description)).setVisibility(View.GONE);
             (findViewById(R.id.url)).setVisibility(View.GONE);
-            (findViewById(R.id.imageText)).setVisibility(View.GONE);
             (findViewById(R.id.addGift)).setVisibility(View.GONE);
+            (findViewById(R.id.clearGift)).setVisibility(View.GONE);
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.FILL_PARENT,
+                    ViewGroup.LayoutParams.FILL_PARENT
+            );
+
         }
     }
 
@@ -93,6 +105,12 @@ public class GiftsActivity extends ListActivity {
     }
 
     public void onAddGift(View v) {
+        if (!giftService.isNetworkAvaliable(GiftsActivity.this)) {
+            messageManager.show(GiftsActivity.this, "No network connection available!", true);
+            Intent intent = new Intent(GiftsActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         GiftDTO giftDTO = getGiftDTO();
 
         if (giftDTO == null) {
@@ -203,6 +221,12 @@ public class GiftsActivity extends ListActivity {
         (findViewById(R.id.fullImage)).setVisibility(View.GONE);
     }
 
+    public void onClearGift(View v){
+        clearInputFields();
+        ImageView img= (ImageView) findViewById(R.id.image);
+        img.setImageResource(R.mipmap.camera);
+    }
+
     //---------------------------------------------------------------------------------------------
     // -------------------------- PRIVATE -----------------------------------------------------------
 
@@ -231,6 +255,17 @@ public class GiftsActivity extends ListActivity {
             CommonResources.cameraBmp.compress(Bitmap.CompressFormat.JPEG, 100, bos1);
             byte[] itemImg = bos1.toByteArray();
             giftDTO.setImage(itemImg);
+        } else {
+            ImageView img= (ImageView) findViewById(R.id.image);
+            img.setImageResource(R.mipmap.camera);
+
+            img.buildDrawingCache();
+            Bitmap bmap = img.getDrawingCache();
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            giftDTO.setImage(byteArray);
         }
 
 

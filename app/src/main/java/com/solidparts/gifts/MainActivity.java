@@ -22,18 +22,26 @@ import com.solidparts.gifts.service.UserService;
 
 
 public class MainActivity extends ActionBarActivity {
-
-    public final static int APP_VERSION = 1;
     public final static String EXTRA_USERDTO = "userDTO";
     public final static String EXTRA_VIEWUSERDTO = "viewUserDTO";
 
     private UserDTO userDTO;
     private UserService userService;
+    private MessageManager messageManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("Gifts Organizer v" + this.getResources().getInteger(R.integer.app_major_version) + "." + this.getResources().getInteger(R.integer.app_minor_version));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Check network status
+        messageManager = new MessageManager();
+        if (!userService.isNetworkAvaliable(this)) {
+            messageManager.show(this, "No network connection available!", true);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         userDTO = (UserDTO) getIntent().getSerializableExtra("userDTO");
 
@@ -45,6 +53,8 @@ public class MainActivity extends ActionBarActivity {
         String[] appArgs = new String[]{};
         AppSyncTask appSyncTask = new AppSyncTask();
         appSyncTask.execute(appArgs);
+
+
     }
 
     @Override
@@ -70,6 +80,13 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onMyGifts(View v) {
+        messageManager = new MessageManager();
+        if (!userService.isNetworkAvaliable(MainActivity.this)) {
+            messageManager.show(MainActivity.this, "No network connection available!", true);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         try {
             Intent intent = new Intent(MainActivity.this, GiftsActivity.class);
             intent.putExtra(EXTRA_USERDTO, userDTO);
@@ -82,9 +99,27 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onOthersGifts(View v) {
+        messageManager = new MessageManager();
+        if (!userService.isNetworkAvaliable(MainActivity.this)) {
+            messageManager.show(MainActivity.this, "No network connection available!", true);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
+
         try {
             Intent intent = new Intent(MainActivity.this, FriendListActivity.class);
             intent.putExtra(EXTRA_USERDTO, userDTO);
+            startActivity(intent);
+        } catch (ActivityNotFoundException anfe) {
+            //on catch, show the download dialog
+            //showDialog(SearchActivity.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+        }
+    }
+
+    public void onLogout(View v) {
+        try {
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
         } catch (ActivityNotFoundException anfe) {
             //on catch, show the download dialog
@@ -117,7 +152,7 @@ public class MainActivity extends ActionBarActivity {
         protected void onPostExecute(DataDTO dataDTO) {
             findViewById(R.id.progressBar).setVisibility(View.GONE);
             //showButtons();
-            if (dataDTO != null && APP_VERSION < dataDTO.getLatestAppVersion()) {
+            if (dataDTO != null && getResources().getInteger(R.integer.app_minor_version) < dataDTO.getLatestAppVersion()) {
                 UpdateDialogFragment updateDialogFragment = new UpdateDialogFragment();
                 updateDialogFragment.show(getFragmentManager(), "updateDialog");
             }

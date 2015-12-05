@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
     private Context context;
     private List<GiftDTO> gifts;
     private GiftDTO actionGift;
+    private MessageManager messageManager;
 
     public GiftAdapter(Context context, List<GiftDTO> gifts, Boolean ownGift, UserDTO userDTO, GiftService giftService, GiftsActivity giftsActivity) {
         super(context, 0, gifts);
@@ -44,6 +46,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         this.ownGift = ownGift;
         this.userDTO = userDTO;
         this.giftService = giftService;
+        messageManager = new MessageManager();
     }
 
     @Override
@@ -92,6 +95,13 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         giftDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (!giftService.isNetworkAvaliable(giftActivity)) {
+                    messageManager.show(giftActivity, "No network connection available!", true);
+                    Intent intent = new Intent(giftActivity, LoginActivity.class);
+                    context.startActivity(intent);
+                }
+
                 if (ownGift) {
                     giftActivity.update(giftDTO);
                 } else {
@@ -107,6 +117,12 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!giftService.isNetworkAvaliable(giftActivity)) {
+                    messageManager.show(giftActivity, "No network connection available!", true);
+                    Intent intent = new Intent(giftActivity, LoginActivity.class);
+                    context.startActivity(intent);
+                }
+
                 if(ownGift){
                     // TODO - Remove gift
                     RemoveGiftTask removeGiftTask = new RemoveGiftTask();
@@ -121,6 +137,12 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         imageButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!giftService.isNetworkAvaliable(giftActivity)) {
+                    messageManager.show(giftActivity, "No network connection available!", true);
+                    Intent intent = new Intent(giftActivity, LoginActivity.class);
+                    context.startActivity(intent);
+                }
+
                 if (!giftDTO.isBought() || (giftDTO.isBought() && giftDTO.getBoughtById() == userDTO.getId())) {
                     // TODO - Toggle bought
 

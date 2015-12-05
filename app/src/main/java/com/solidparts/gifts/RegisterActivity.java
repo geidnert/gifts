@@ -39,6 +39,13 @@ public class RegisterActivity extends ActionBarActivity {
     }
 
     public void onRegister(View v) {
+        messageManager = new MessageManager();
+        if (!userService.isNetworkAvaliable(RegisterActivity.this)) {
+            messageManager.show(RegisterActivity.this, "No network connection available!", true);
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         try {
             AddUserTask addUserTask = new AddUserTask();
             UserDTO[] users = new UserDTO[1];
@@ -62,11 +69,11 @@ public class RegisterActivity extends ActionBarActivity {
 
     private UserDTO getUserDTO(){
         //String giftName = ((EditText) findViewById(R.id.giftName)).getText().toString();
-        String email = ((TextView) findViewById(R.id.email)).getText().toString();
-        String firstName= ((EditText) findViewById(R.id.firstName)).getText().toString();
-        String lastName = ((EditText) findViewById(R.id.lastName)).getText().toString();
-        String password = ((EditText) findViewById(R.id.password)).getText().toString();
-        String groupname = ((EditText) findViewById(R.id.groupName)).getText().toString();
+        String email = ((TextView) findViewById(R.id.email)).getText().toString().trim();
+        String firstName= ((EditText) findViewById(R.id.firstName)).getText().toString().trim();
+        String lastName = ((EditText) findViewById(R.id.lastName)).getText().toString().trim();
+        String password = ((EditText) findViewById(R.id.password)).getText().toString().trim();
+        String groupname = ((EditText) findViewById(R.id.groupName)).getText().toString().trim();
 
 
         if (email.equals("") || firstName.equals("") || lastName.equals("") || password.equals("") ||

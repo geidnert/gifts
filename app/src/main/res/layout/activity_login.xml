@@ -31,6 +31,7 @@
                 android:imeOptions="actionUnspecified" android:inputType="textPassword"
                 android:layout_marginTop="20dp"
                 android:textSize="20dp"
+                android:password="true"
                 android:maxLines="1" android:singleLine="true" />
 
             <Button android:id="@+id/email_sign_in_button" style="?android:textAppearanceSmall"
@@ -38,7 +39,8 @@
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in"
                 android:textSize="20dp"
                 android:layout_height="60dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:background="#99ff8b" />
 
         </LinearLayout>
     </ScrollView>
