@@ -1,10 +1,18 @@
 package com.solidparts.gifts;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -27,6 +35,7 @@ import com.solidparts.gifts.dto.UserDTO;
 import com.solidparts.gifts.service.GiftService;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -136,15 +145,39 @@ public class GiftsActivity extends ActionBarActivity {
 
         clearInputFields();
 
-        ImageView img= (ImageView) findViewById(R.id.image);
+        ImageView img = (ImageView) findViewById(R.id.image);
         img.setImageResource(R.mipmap.camera);
 
     }
 
-    public void onTakePhoto(View view) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA_REQUEST);
+    public void onAddExistingImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String pictureDirectoryPath = pictureDirectory.getPath();
+        Uri data = Uri.parse(pictureDirectoryPath);
+        intent.setDataAndType(data, "image/*");
+        startActivityForResult(intent, IMAGE_GALLERY_REQUEST);
     }
+
+    public void onTakePhoto(View view) {
+        //UpdateDialogFragment updateDialogFragment = new UpdateDialogFragment();
+        //updateDialogFragment.show(getFragmentManager(), "updateDialog");
+
+        //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //startActivityForResult(intent, CAMERA_REQUEST);
+
+        onPickImage(view);
+    }
+
+    private static final int PICK_IMAGE_ID = 234; // the number doesn't matter
+
+    public void onPickImage(View view) {
+        //onTakePhoto(view);
+        Intent chooseImageIntent = ImagePicker.getPickImageIntent(this);
+        startActivityForResult(chooseImageIntent, PICK_IMAGE_ID);
+    }
+
+
 
     public void update(GiftDTO giftDTO){
         updateGiftDTO = giftDTO;
@@ -176,6 +209,8 @@ public class GiftsActivity extends ActionBarActivity {
         giftDescription.setText("");
         giftUrl.setText("");
 
+        ImageView img= (ImageView) findViewById(R.id.image);
+        img.setImageResource(R.mipmap.camera);
     }
 
     @Override
@@ -183,7 +218,19 @@ public class GiftsActivity extends ActionBarActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            if (requestCode == CAMERA_REQUEST) {
+            switch(requestCode) {
+                case PICK_IMAGE_ID:
+                    Bitmap bitmap = ImagePicker.getImageFromResult(this, resultCode, data);
+                    // TODO use bitmap
+                    CommonResources.cameraBmp = bitmap;
+                    showImage(bitmap);
+                    break;
+                default:
+                    super.onActivityResult(requestCode, resultCode, data);
+                    break;
+            }
+
+            /*if (requestCode == CAMERA_REQUEST) {
                 Bitmap image = (Bitmap) data.getExtras().get("data");
                 CommonResources.cameraBmp = image;
                 showImage(CommonResources.cameraBmp);
@@ -193,12 +240,13 @@ public class GiftsActivity extends ActionBarActivity {
                 try {
                     Uri imageUri = data.getData();
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                    CommonResources.cameraBmp = bitmap;
                     showImage(bitmap);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Toast.makeText(this, "Unable to open image", Toast.LENGTH_LONG).show();
                 }
-            }
+            }*/
 
         }
     }
@@ -209,12 +257,14 @@ public class GiftsActivity extends ActionBarActivity {
 
     public void onShowImage(Bitmap image) {
         (findViewById(R.id.addGift)).setVisibility(View.GONE);
+        (findViewById(R.id.clearGift)).setVisibility(View.GONE);
         ((ImageView) findViewById(R.id.fullImage)).setImageBitmap(image);
         (findViewById(R.id.fullImage)).setVisibility(View.VISIBLE);
     }
 
     public void onHideImage(View view) {
         if(viewUserDTO.getId() == userDTO.getId()) {
+            (findViewById(R.id.clearGift)).setVisibility(View.VISIBLE);
             (findViewById(R.id.addGift)).setVisibility(View.VISIBLE);
         }
 
@@ -223,7 +273,7 @@ public class GiftsActivity extends ActionBarActivity {
 
     public void onClearGift(View v){
         clearInputFields();
-        ImageView img= (ImageView) findViewById(R.id.image);
+        ImageView img = (ImageView) findViewById(R.id.image);
         img.setImageResource(R.mipmap.camera);
     }
 
@@ -231,8 +281,8 @@ public class GiftsActivity extends ActionBarActivity {
     // -------------------------- PRIVATE -----------------------------------------------------------
 
     private void showImage(Bitmap image) {
-        CommonResources.cameraBmp = image;
-        giftImage.setImageBitmap(CommonResources.cameraBmp);
+        //CommonResources.cameraBmp = image;
+        giftImage.setImageBitmap(image);
     }
 
     private GiftDTO getGiftDTO() {
@@ -250,9 +300,11 @@ public class GiftsActivity extends ActionBarActivity {
         giftDTO.setUrl(giftUrl);
         giftDTO.setUserId(userDTO.getId());
 
+        //Bitmap bitmap = ((Bitmap)giftImage.getDrawable()).getBitmap();
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.id.image);
         if(CommonResources.cameraBmp != null) {
             ByteArrayOutputStream bos1 = new ByteArrayOutputStream();
-            CommonResources.cameraBmp.compress(Bitmap.CompressFormat.JPEG, 100, bos1);
+            CommonResources.cameraBmp.compress(Bitmap.CompressFormat.PNG, 100, bos1);
             byte[] itemImg = bos1.toByteArray();
             giftDTO.setImage(itemImg);
         } else {
@@ -271,6 +323,49 @@ public class GiftsActivity extends ActionBarActivity {
 
         return giftDTO;
     }
+
+    public static class UpdateDialogFragment extends DialogFragment {
+GiftsActivity context;
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("New photo or pick existing photo?")
+                    .setPositiveButton("New", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            getActivity().startActivityForResult(intent, CAMERA_REQUEST);
+                            //context.onTakePhoto();
+                            dialog.dismiss();
+                        }
+
+                    })
+                    .setNegativeButton("Existing", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent(Intent.ACTION_PICK);
+                            File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                            String pictureDirectoryPath = pictureDirectory.getPath();
+                            Uri data = Uri.parse(pictureDirectoryPath);
+                            intent.setDataAndType(data, "image/*");
+                            getActivity().startActivityForResult(intent, IMAGE_GALLERY_REQUEST);
+                            //context.onAddExistingImage();
+                            dialog.dismiss();
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
+
+        @Override
+        public void onAttach(Activity activity) {
+            // TODO Auto-generated method stub
+            super.onAttach(activity);
+            GiftsActivity context=(GiftsActivity)activity;
+        }
+    }
+
+
 
     //---------------------------------------------------------------------------------------------
     // -------------------------- ASYNC -----------------------------------------------------------
@@ -398,7 +493,8 @@ public class GiftsActivity extends ActionBarActivity {
                 //startActivity(intent);
 
                 //ArrayAdapter<String> adapter = new ArrayAdapter<String>(SearchActivity.this, android.R.layout.simple_list_item_1, android.R.id., allItems);
-// Assign adapter to ListView
+                // Assign adapter to ListView
+
                 giftlistView.setAdapter(giftAdapter);
 
 

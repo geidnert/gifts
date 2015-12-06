@@ -77,7 +77,7 @@ public class OnlineGiftDAO implements IGiftDAO {
             boolean bought = jsonItem.getInt("bought") == 1;
             int boughtById = jsonItem.getInt("boughtById");
 
-            byte[] image = Base64.decode(jsonItem.get("image").toString(), Base64.DEFAULT);
+            byte[] image = Base64.decode(jsonItem.get("image").toString(), Base64.DEFAULT | Base64.NO_WRAP);
 
             GiftDTO giftDTO = new GiftDTO();
             giftDTO.setId(id);

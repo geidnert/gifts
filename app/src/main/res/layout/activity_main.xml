@@ -43,15 +43,6 @@
         android:layout_centerHorizontal="true"
         android:textSize="20dp" />
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone" />
-
     <Button
         android:layout_width="fill_parent"
         android:layout_height="60dp"
@@ -64,4 +55,13 @@
         android:textSize="20dp"
         android:background="#ff8b8d"
         android:onClick="onLogout" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:visibility="gone"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

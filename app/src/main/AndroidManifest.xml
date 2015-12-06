@@ -23,7 +23,7 @@
             android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize|stateVisible">
+            android:windowSoftInputMode="adjustResize|stateHidden">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,12 +33,15 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_main"></activity>
         <activity
             android:name=".GiftsActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_gifts"></activity>
         <activity
             android:name=".FriendListActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/title_activity_friend_list"></activity>
 
         <activity android:name=".RegisterActivity"></activity>
