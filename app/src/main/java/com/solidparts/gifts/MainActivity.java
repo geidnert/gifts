@@ -47,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
 
         userService = new UserService(this);
 
-        ((TextView) findViewById(R.id.msg)).setText("Welcome " + userDTO.getFirstname() + " to your gift organizer.");
+        ((TextView) findViewById(R.id.msg)).setText("Welcome " + userDTO.getFirstname() + "!");
 
         // Sync data
         String[] appArgs = new String[]{};

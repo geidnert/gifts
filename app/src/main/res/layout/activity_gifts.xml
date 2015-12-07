@@ -75,7 +75,8 @@
         android:layout_below="@+id/description"
         android:capitalize="sentences"
         android:layout_alignRight="@+id/clearGift"
-        android:layout_alignEnd="@+id/clearGift" />
+        android:layout_alignEnd="@+id/clearGift"
+        android:inputType="textWebEditText" />
 
     <ImageView
         android:layout_width="fill_parent"

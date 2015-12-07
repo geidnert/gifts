@@ -69,6 +69,11 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         giftImage.setImageBitmap(bitmap);
         giftDescription.setText(giftDTO.getDescription());
 
+        if(!ownGift && (giftDTO.getUrl() != null && !giftDTO.getUrl().equals(""))){
+            giftDescription.setTextColor(0xFF5EA9A1);
+        }
+
+
         ImageButton imageButton2 = (ImageButton) convertView.findViewById(R.id.imageButton2);
         ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.imageButton);
 
@@ -124,6 +129,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
                 }
 
                 if(ownGift){
+                    giftActivity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
                     // TODO - Remove gift
                     RemoveGiftTask removeGiftTask = new RemoveGiftTask();
                     GiftDTO[] gifts = new GiftDTO[1];
@@ -144,6 +150,8 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
                 }
 
                 if (!giftDTO.isBought() || (giftDTO.isBought() && giftDTO.getBoughtById() == userDTO.getId())) {
+                    giftActivity.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+
                     // TODO - Toggle bought
 
                     if (giftDTO.isBought()) {
@@ -214,6 +222,8 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
 
                 context.startActivity(intent);*/
             }
+
+            giftActivity.findViewById(R.id.progressBar).setVisibility(View.GONE);
             //else
             //messageManager.show(getApplicationContext(), "Gift not saved!", false);*/
 
@@ -263,6 +273,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
 
                 context.startActivity(intent);*/
             }
+            giftActivity.findViewById(R.id.progressBar).setVisibility(View.GONE);
             //else
                 //messageManager.show(getApplicationContext(), "Gift not saved!", false);*/
 

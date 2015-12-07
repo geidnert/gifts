@@ -66,6 +66,10 @@ public class GiftsActivity extends ActionBarActivity {
         messageManager = new MessageManager();
         giftImage = ((ImageView) findViewById(R.id.image));
 
+        searchGiftTask = new SearchGiftTask();
+        search();
+
+
         if(viewUserDTO.getId() == userDTO.getId()){
             setTitle("My gifts");
             //((TextView) findViewById(R.id.userName)).setText("My gifts");
@@ -73,8 +77,6 @@ public class GiftsActivity extends ActionBarActivity {
             setTitle(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
             //((TextView) findViewById(R.id.userName)).setText(viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "'s gifts");
         }
-        searchGiftTask = new SearchGiftTask();
-        search();
 
         if(!viewUserDTO.equals(userDTO)){
             (findViewById(R.id.image)).setVisibility(View.GONE);
@@ -325,7 +327,7 @@ public class GiftsActivity extends ActionBarActivity {
     }
 
     public static class UpdateDialogFragment extends DialogFragment {
-GiftsActivity context;
+        GiftsActivity context;
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -472,6 +474,10 @@ GiftsActivity context;
 
             // adapt the search results returned from doInBackground so that they can be presented on the UI.
             if (allGifts != null && allGifts.size() > 0) {
+
+                if(viewUserDTO.getId() == userDTO.getId()) {
+                    setTitle("My gifts (" + allUserGifts.size() + ")");
+                }
 
                 List<String> allItemNames = new ArrayList<>(allGifts.size());
 
