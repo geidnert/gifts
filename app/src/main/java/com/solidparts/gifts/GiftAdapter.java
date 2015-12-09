@@ -210,24 +210,13 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
                     GiftDTO gift = (GiftDTO)it.next();
 
                     if(actionGift != null && gift.equals(actionGift)) {
-                        //it.remove();
-
                         notifyDataSetChanged();
                         actionGift = null;
                     }
                 }
-                /*Intent intent = new Intent(context, GiftsActivity.class);
-                intent.putExtra(FriendListActivity.EXTRA_USERDTO, userDTO);
-                intent.putExtra(FriendListActivity.EXTRA_VIEWUSERDTO, userDTO);
-
-                context.startActivity(intent);*/
             }
 
             giftActivity.findViewById(R.id.progressBar).setVisibility(View.GONE);
-            //else
-            //messageManager.show(getApplicationContext(), "Gift not saved!", false);*/
-
-            //startActivity(new Intent(AddItemActivity.this, MainActivity.class));
         }
 
         @Override
@@ -267,17 +256,9 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
                         actionGift = null;
                     }
                 }
-                /*Intent intent = new Intent(context, GiftsActivity.class);
-                intent.putExtra(FriendListActivity.EXTRA_USERDTO, userDTO);
-                intent.putExtra(FriendListActivity.EXTRA_VIEWUSERDTO, userDTO);
-
-                context.startActivity(intent);*/
             }
-            giftActivity.findViewById(R.id.progressBar).setVisibility(View.GONE);
-            //else
-                //messageManager.show(getApplicationContext(), "Gift not saved!", false);*/
 
-            //startActivity(new Intent(AddItemActivity.this, MainActivity.class));
+            giftActivity.findViewById(R.id.progressBar).setVisibility(View.GONE);
         }
 
         @Override

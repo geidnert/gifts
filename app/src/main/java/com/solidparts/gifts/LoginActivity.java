@@ -67,7 +67,7 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTitle("Gifts Organizer v" + this.getResources().getInteger(R.integer.app_major_version) + "." + this.getResources().getInteger(R.integer.app_minor_version));
+        setTitle("Gifts v" + this.getResources().getInteger(R.integer.app_major_version) + "." + this.getResources().getInteger(R.integer.app_minor_version));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 

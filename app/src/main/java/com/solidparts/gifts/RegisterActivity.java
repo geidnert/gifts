@@ -25,6 +25,7 @@ public class RegisterActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTitle("Gifts - Register");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
