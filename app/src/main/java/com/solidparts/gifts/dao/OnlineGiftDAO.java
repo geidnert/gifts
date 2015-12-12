@@ -14,6 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,9 +74,9 @@ public class OnlineGiftDAO implements IGiftDAO {
 
             int id = jsonItem.getInt("id");
             int uuserId = jsonItem.getInt("userId");
-            String name = jsonItem.getString("name");
-            String description = jsonItem.getString("description");
-            String url = jsonItem.getString("url");
+            String name = URLDecoder.decode(jsonItem.getString("name"), "UTF-8");
+            String description = URLDecoder.decode(jsonItem.getString("description"), "UTF-8");
+            String url = URLDecoder.decode(jsonItem.getString("url"), "UTF-8");
             boolean bought = jsonItem.getInt("bought") == 1;
             int boughtById = jsonItem.getInt("boughtById");
 
@@ -99,9 +102,9 @@ public class OnlineGiftDAO implements IGiftDAO {
     public void addGift(GiftDTO giftDTO, int sync) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         //nameValuePairs.add(new BasicNameValuePair("name", giftDTO.getName()));
-        nameValuePairs.add(new BasicNameValuePair("description", giftDTO.getDescription()));
-        nameValuePairs.add(new BasicNameValuePair("userId", ""+giftDTO.getUserId()));
-        nameValuePairs.add(new BasicNameValuePair("url", giftDTO.getUrl()));
+        nameValuePairs.add(new BasicNameValuePair("description", URLEncoder.encode(giftDTO.getDescription(), "UTF-8")));
+        nameValuePairs.add(new BasicNameValuePair("userId", URLEncoder.encode(""+giftDTO.getUserId(), "UTF-8")));
+        nameValuePairs.add(new BasicNameValuePair("url", URLEncoder.encode(giftDTO.getUrl(), "UTF-8")));
         nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.DEFAULT)));
 
 
@@ -121,9 +124,9 @@ public class OnlineGiftDAO implements IGiftDAO {
     public void updateGift(GiftDTO giftDTO, int sync) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("id", ""+giftDTO.getId()));
-        nameValuePairs.add(new BasicNameValuePair("description", giftDTO.getDescription()));
-        nameValuePairs.add(new BasicNameValuePair("userId", ""+giftDTO.getUserId()));
-        nameValuePairs.add(new BasicNameValuePair("url", giftDTO.getUrl()));
+        nameValuePairs.add(new BasicNameValuePair("description", URLEncoder.encode(giftDTO.getDescription(), "UTF-8")));
+        nameValuePairs.add(new BasicNameValuePair("userId", URLEncoder.encode(""+giftDTO.getUserId(), "UTF-8")));
+        nameValuePairs.add(new BasicNameValuePair("url", URLEncoder.encode(giftDTO.getUrl(), "UTF-8")));
         nameValuePairs.add(new BasicNameValuePair("bought", ""+(giftDTO.isBought()?1:0)));
         nameValuePairs.add(new BasicNameValuePair("boughtById", ""+giftDTO.getBoughtById()));
         nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.DEFAULT)));
