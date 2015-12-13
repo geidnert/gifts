@@ -80,7 +80,7 @@ public class OnlineGiftDAO implements IGiftDAO {
             boolean bought = jsonItem.getInt("bought") == 1;
             int boughtById = jsonItem.getInt("boughtById");
 
-            byte[] image = Base64.decode(jsonItem.get("image").toString(), Base64.DEFAULT | Base64.NO_WRAP);
+            byte[] image = Base64.decode(jsonItem.get("image").toString(), Base64.URL_SAFE | Base64.NO_WRAP);
 
             GiftDTO giftDTO = new GiftDTO();
             giftDTO.setId(id);
@@ -105,7 +105,7 @@ public class OnlineGiftDAO implements IGiftDAO {
         nameValuePairs.add(new BasicNameValuePair("description", URLEncoder.encode(giftDTO.getDescription(), "UTF-8")));
         nameValuePairs.add(new BasicNameValuePair("userId", URLEncoder.encode(""+giftDTO.getUserId(), "UTF-8")));
         nameValuePairs.add(new BasicNameValuePair("url", URLEncoder.encode(giftDTO.getUrl(), "UTF-8")));
-        nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.DEFAULT)));
+        nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.URL_SAFE)));
 
 
         String request = networkDAO.request(NetworkDAO.ADD, nameValuePairs);
@@ -129,7 +129,7 @@ public class OnlineGiftDAO implements IGiftDAO {
         nameValuePairs.add(new BasicNameValuePair("url", URLEncoder.encode(giftDTO.getUrl(), "UTF-8")));
         nameValuePairs.add(new BasicNameValuePair("bought", ""+(giftDTO.isBought()?1:0)));
         nameValuePairs.add(new BasicNameValuePair("boughtById", ""+giftDTO.getBoughtById()));
-        nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.DEFAULT)));
+        nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.URL_SAFE)));
 
 
         networkDAO.request(NetworkDAO.UPDATE, nameValuePairs);

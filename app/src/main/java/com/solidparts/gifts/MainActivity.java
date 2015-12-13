@@ -182,13 +182,13 @@ public class MainActivity extends ActionBarActivity {
                             dialog.dismiss();
                         }
 
-                    })
-                    .setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
+                    });
+                    /*.setNegativeButton("Cancle", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // User cancelled the dialog
                             dialog.dismiss();
                         }
-                    });
+                    });*/
             // Create the AlertDialog object and return it
             return builder.create();
         }
