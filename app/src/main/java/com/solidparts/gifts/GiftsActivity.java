@@ -74,7 +74,25 @@ public class GiftsActivity extends ActionBarActivity {
             (findViewById(R.id.addGift)).setVisibility(View.GONE);
             (findViewById(R.id.clearGift)).setVisibility(View.GONE);
             (findViewById(R.id.ruler)).setVisibility(View.GONE);
+            (findViewById(R.id.add)).setVisibility(View.GONE);
         }
+    }
+
+    public void onAdd(View view){
+        showAdd();
+    }
+
+    private void closeAdd(){
+        if(viewUserDTO.equals(userDTO)) {
+            (findViewById(R.id.add)).setVisibility(View.VISIBLE);
+        }
+
+        (findViewById(R.id.addSection)).setVisibility(View.GONE);
+    }
+
+    private void showAdd(){
+        (findViewById(R.id.add)).setVisibility(View.GONE);
+        (findViewById(R.id.addSection)).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -161,6 +179,8 @@ public class GiftsActivity extends ActionBarActivity {
         giftDescription.setText(giftDTO.getDescription());
         giftUrl.setText(giftDTO.getUrl());
 
+        showAdd();
+
     }
 
     private void clearInputFields(){
@@ -220,6 +240,7 @@ public class GiftsActivity extends ActionBarActivity {
         clearInputFields();
         ImageView img = (ImageView) findViewById(R.id.image);
         img.setImageResource(R.mipmap.camera);
+        closeAdd();
     }
 
     //---------------------------------------------------------------------------------------------
@@ -296,6 +317,7 @@ public class GiftsActivity extends ActionBarActivity {
                 messageManager.show(getApplicationContext(), "Gift not saved!", false);
 
             hideSoftKeyboard();
+            closeAdd();
         }
 
         @Override
@@ -334,6 +356,7 @@ public class GiftsActivity extends ActionBarActivity {
                 messageManager.show(getApplicationContext(), "Gift not saved!", false);
 
             hideSoftKeyboard();
+            closeAdd();
         }
 
         @Override
@@ -394,6 +417,7 @@ public class GiftsActivity extends ActionBarActivity {
                         viewUserDTO.getFirstname() + " " + viewUserDTO.getLastname() + "!", false);
             }
             hideSoftKeyboard();
+            closeAdd();
         }
 
         @Override

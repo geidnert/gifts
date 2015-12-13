@@ -154,6 +154,7 @@ public class MainActivity extends ActionBarActivity {
             //showButtons();
             if (dataDTO != null && getResources().getInteger(R.integer.app_minor_version) < dataDTO.getLatestAppVersion()) {
                 UpdateDialogFragment updateDialogFragment = new UpdateDialogFragment();
+                updateDialogFragment.setCancelable(false);
                 updateDialogFragment.show(getFragmentManager(), "updateDialog");
             }
         }
