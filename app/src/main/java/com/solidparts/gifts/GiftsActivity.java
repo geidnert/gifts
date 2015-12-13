@@ -380,7 +380,7 @@ public class GiftsActivity extends ActionBarActivity {
                 while(it.hasNext()){
                     GiftDTO giftDTO = (GiftDTO) it.next();
 
-                    if(giftDTO.isBought() && giftDTO.getBoughtById() != userDTO.getId()){
+                    if(giftDTO.getUserId() != userDTO.getId() && giftDTO.isBought() && giftDTO.getBoughtById() != userDTO.getId()){
                         it.remove();
                     }
                 }
