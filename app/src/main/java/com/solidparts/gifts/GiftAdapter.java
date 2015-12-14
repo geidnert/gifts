@@ -135,7 +135,6 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
                     GiftDTO[] gifts = new GiftDTO[1];
                     gifts[0] = giftDTO;
                     removeGiftTask.execute(gifts);
-
                 }
             }
         });
@@ -259,6 +258,7 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
             }
 
             giftActivity.findViewById(R.id.progressBar).setVisibility(View.GONE);
+            giftActivity.setTitle("My gifts (" + gifts.size() + ")");
         }
 
         @Override

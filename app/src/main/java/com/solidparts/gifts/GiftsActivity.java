@@ -223,6 +223,9 @@ public class GiftsActivity extends ActionBarActivity {
     public void onShowImage(Bitmap image) {
         (findViewById(R.id.addGift)).setVisibility(View.GONE);
         (findViewById(R.id.clearGift)).setVisibility(View.GONE);
+        (findViewById(R.id.add)).setVisibility(View.GONE);
+        (findViewById(R.id.ruler)).setVisibility(View.GONE);
+        (findViewById(android.R.id.list)).setVisibility(View.GONE);
         ((ImageView) findViewById(R.id.fullImage)).setImageBitmap(image);
         (findViewById(R.id.fullImage)).setVisibility(View.VISIBLE);
     }
@@ -231,8 +234,11 @@ public class GiftsActivity extends ActionBarActivity {
         if(viewUserDTO.getId() == userDTO.getId()) {
             (findViewById(R.id.clearGift)).setVisibility(View.VISIBLE);
             (findViewById(R.id.addGift)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.add)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.ruler)).setVisibility(View.VISIBLE);
         }
 
+        (findViewById(android.R.id.list)).setVisibility(View.VISIBLE);
         (findViewById(R.id.fullImage)).setVisibility(View.GONE);
     }
 

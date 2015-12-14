@@ -124,8 +124,8 @@ public class ImagePicker {
      **/
     private static Bitmap getImageResized(Context context, Uri selectedImage) {
         Bitmap bm = null;
-        //int[] sampleSizes = new int[]{5, 3, 2, 1};
-        int[] sampleSizes = new int[]{5, 3, 2, 1};
+        int[] sampleSizes = new int[]{9,8,7};
+        //int[] sampleSizes = new int[]{5};
         int i = 0;
         do {
             bm = decodeBitmap(context, selectedImage, sampleSizes[i]);
