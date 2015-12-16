@@ -406,13 +406,13 @@ public class GiftsActivity extends ActionBarActivity {
 
                 Iterator it = allGifts.iterator();
 
-                while(it.hasNext()){
+                /*while(it.hasNext()){
                     GiftDTO giftDTO = (GiftDTO) it.next();
 
-                    if(giftDTO.getUserId() != userDTO.getId() && giftDTO.isBought() && giftDTO.getBoughtById() != userDTO.getId()){
+                    if(giftDTO.isBought() && giftDTO.getBoughtById() == userDTO.getId()){
                         it.remove();
                     }
-                }
+                }*/
 
                 final ListView giftlistView = (ListView) findViewById(android.R.id.list);
                 GiftAdapter giftAdapter = new GiftAdapter(GiftsActivity.this, allGifts, viewUserDTO.equals(userDTO), userDTO, giftService, GiftsActivity.this);

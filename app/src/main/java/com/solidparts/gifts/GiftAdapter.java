@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -77,17 +78,35 @@ public class GiftAdapter extends ArrayAdapter<GiftDTO> {
         ImageButton imageButton2 = (ImageButton) convertView.findViewById(R.id.imageButton2);
         ImageButton imageButton = (ImageButton) convertView.findViewById(R.id.imageButton);
 
-        if(!ownGift && giftDTO.isBought()){
+        TextView giftBought = (TextView) convertView.findViewById(R.id.giftBought);
+
+        if(giftDTO.isBought() && giftDTO.getBoughtById() != userDTO.getId()){
+            imageButton2.setVisibility((View.GONE));
+            imageButton.setVisibility((View.GONE));
+            giftImage.setVisibility((View.GONE));
+            giftDescription.setVisibility(View.GONE);
+            giftBought.setVisibility(View.VISIBLE);
+        }
+        else if(!ownGift && giftDTO.isBought()){
             imageButton2.setBackgroundColor(0xFFFF8B8D);// Red
             imageButton2.setVisibility((View.VISIBLE));
+            giftBought.setVisibility(View.GONE);
             imageButton.setVisibility((View.GONE));
+            giftImage.setVisibility((View.VISIBLE));
+            giftDescription.setVisibility(View.VISIBLE);
         } else if(!ownGift && !giftDTO.isBought()) {
             imageButton2.setBackgroundColor(0xFF99FF8B);// Green
             imageButton2.setVisibility((View.VISIBLE));
+            giftBought.setVisibility(View.GONE);
             imageButton.setVisibility((View.GONE));
+            giftImage.setVisibility((View.VISIBLE));
+            giftDescription.setVisibility(View.VISIBLE);
         } else {
             imageButton.setVisibility((View.VISIBLE));
+            giftBought.setVisibility(View.GONE);
             imageButton2.setVisibility((View.GONE));
+            giftImage.setVisibility((View.VISIBLE));
+            giftDescription.setVisibility(View.VISIBLE);
         }
 
         giftImage.setOnClickListener(new View.OnClickListener() {
