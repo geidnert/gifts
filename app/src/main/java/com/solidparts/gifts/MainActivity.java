@@ -49,6 +49,14 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        userDTO = (UserDTO) getIntent().getSerializableExtra("userDTO");
+
+        if(userDTO == null){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         // GCM
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -73,6 +81,7 @@ public class MainActivity extends ActionBarActivity {
         if (checkPlayServices()) {
             // Start IntentService to register this application with GCM.
             Intent intent = new Intent(this, RegistrationIntentService.class);
+            intent.putExtra(EXTRA_USERDTO, userDTO);
             startService(intent);
         }
 
@@ -84,12 +93,6 @@ public class MainActivity extends ActionBarActivity {
             startActivity(intent);
         }
 
-        userDTO = (UserDTO) getIntent().getSerializableExtra("userDTO");
-
-        if(userDTO == null){
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-        }
 
         userService = new UserService(this);
 
@@ -273,5 +276,40 @@ public class MainActivity extends ActionBarActivity {
             return false;
         }
         return true;
+    }
+
+
+    private class UpdateUserTask extends AsyncTask<UserDTO, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(UserDTO... userDTO) {
+            try {
+                userService.updateUser(userDTO[0]);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            findViewById(R.id.progressBar).setVisibility(View.GONE);
+            //enableButtons();
+            if (success) {
+                messageManager.show(getApplicationContext(), "User Token Saved!", false);
+            }
+            else
+                messageManager.show(getApplicationContext(), "User Token not saved!", false);
+
+            //startActivity(new Intent(AddItemActivity.this, MainActivity.class));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+            //disableButtons();
+        }
     }
 }

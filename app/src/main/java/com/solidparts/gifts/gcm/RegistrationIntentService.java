@@ -17,16 +17,22 @@
 package com.solidparts.gifts.gcm;
 
 import android.app.IntentService;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
+import com.solidparts.gifts.MessageManager;
 import com.solidparts.gifts.R;
+import com.solidparts.gifts.dto.UserDTO;
+import com.solidparts.gifts.service.UserService;
 
 import java.io.IOException;
 
@@ -34,6 +40,10 @@ public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
+    private UserDTO userDTO = null;
+
+    private UserService userService;
+    private MessageManager messageManager;
 
     public RegistrationIntentService() {
         super(TAG);
@@ -42,6 +52,11 @@ public class RegistrationIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        userDTO = (UserDTO) intent.getSerializableExtra("userDTO");
+
+        userService = new UserService(this);
+        messageManager = new MessageManager();
 
         try {
             // [START register_for_gcm]
@@ -87,6 +102,18 @@ public class RegistrationIntentService extends IntentService {
      * @param token The new token.
      */
     private void sendRegistrationToServer(String token) {
+        String tokenToStore = token;
+        userDTO.setGcm_regid(token);
+
+        try {
+            UpdateUserTask updateUserTask = new UpdateUserTask();
+            UserDTO[] users = new UserDTO[1];
+            users[0] = userDTO;
+            updateUserTask.execute(users);
+        } catch (ActivityNotFoundException anfe) {
+            //on catch, show the download dialog
+            //showDialog(SearchActivity.this, "No Scanner Found", "Download a scanner code activity?", "Yes", "No").show();
+        }
         // Add custom implementation, as needed.
     }
 
@@ -104,5 +131,39 @@ public class RegistrationIntentService extends IntentService {
         }
     }
     // [END subscribe_topics]
+
+    private class UpdateUserTask extends AsyncTask<UserDTO, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(UserDTO... userDTO) {
+            try {
+                userService.updateUser(userDTO[0]);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            //findViewById(R.id.progressBar).setVisibility(View.GONE);
+            //enableButtons();
+            if (success) {
+                messageManager.show(getApplicationContext(), "User Token Saved!", false);
+            }
+            else
+                messageManager.show(getApplicationContext(), "User Token not saved!", false);
+
+            //startActivity(new Intent(AddItemActivity.this, MainActivity.class));
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+            //disableButtons();
+        }
+    }
 
 }

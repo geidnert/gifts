@@ -74,6 +74,7 @@ public class OnlineUserDAO implements IUserDAO {
             String lastname = jsonUser.getString("lastname");
             String email = jsonUser.getString("email");
             String groupname = jsonUser.getString("groupname");
+            String gcm_regid = jsonUser.getString("gcm_regid");
 
 
             //byte[] image = Base64.decode(jsonUser.get("image").toString(), Base64.DEFAULT);
@@ -85,6 +86,7 @@ public class OnlineUserDAO implements IUserDAO {
             userDTO.setFirstname(firstname);
             userDTO.setLastname(lastname);
             userDTO.setGroupName(groupname);
+            userDTO.setGcm_regid(gcm_regid);
 
             allUsers.add(userDTO);
         }
@@ -113,6 +115,7 @@ public class OnlineUserDAO implements IUserDAO {
             String email = jsonUser.getString("email");
             String groupname = jsonUser.getString("groupname");
             String password = jsonUser.getString("password");
+            String gcm_regid = jsonUser.getString("gcm_regid");
 
 
             //byte[] image = Base64.decode(jsonUser.get("image").toString(), Base64.DEFAULT);
@@ -125,6 +128,7 @@ public class OnlineUserDAO implements IUserDAO {
             userDTO.setLastname(lastname);
             userDTO.setGroupName(groupname);
             userDTO.setPassword(password);
+            userDTO.setGcm_regid(gcm_regid);
 
             allUsers.add(userDTO);
         }
@@ -161,13 +165,14 @@ public class OnlineUserDAO implements IUserDAO {
         nameValuePairs.add(new BasicNameValuePair("firstname", userDTO.getFirstname()));
         nameValuePairs.add(new BasicNameValuePair("lastname", userDTO.getLastname() + ""));
         nameValuePairs.add(new BasicNameValuePair("groupname", userDTO.getGroupName()));
+        nameValuePairs.add(new BasicNameValuePair("gcm_regid", userDTO.getGcm_regid()));
         //nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(userDTO.getImage(), Base64.DEFAULT)));
 
-        networkDAO.request(NetworkDAO.UPDATE, nameValuePairs);
+        networkDAO.request(NetworkDAO.UPDATE_USER, nameValuePairs);
 
         // Also save to local database if its not a sync operation
         //if (sync == 0) {
-        offlineUserDAO.updateUser(userDTO, 1);
+        //offlineUserDAO.updateUser(userDTO, 1);
         //}
     }
 
