@@ -3,6 +3,7 @@ package com.solidparts.gifts.dao;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.solidparts.gifts.dto.GiftDTO;
+import com.solidparts.gifts.dto.UserDTO;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface IGiftDAO {
 
     public List<GiftDTO> getGifts(int userId) throws Exception;
 
-    public void addGift(GiftDTO giftDTO, int sync) throws Exception;
+    public void addGift(UserDTO userDTO, GiftDTO giftDTO, int sync) throws Exception;
 
     public void updateGift(GiftDTO giftDTO, int sync) throws Exception;
 

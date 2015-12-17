@@ -11,6 +11,7 @@ import com.solidparts.gifts.dao.IGiftDAO;
 import com.solidparts.gifts.dao.OfflineGiftDAO;
 import com.solidparts.gifts.dao.OnlineGiftDAO;
 import com.solidparts.gifts.dto.GiftDTO;
+import com.solidparts.gifts.dto.UserDTO;
 
 import java.util.List;
 
@@ -48,14 +49,14 @@ public class GiftService implements IGiftService {
     }
 
     @Override
-    public void addGift(GiftDTO giftDTO) {
+    public void addGift(UserDTO userDTO, GiftDTO giftDTO) {
         try {
-            onlineGiftDAO.addGift(giftDTO, 0);
+            onlineGiftDAO.addGift(userDTO, giftDTO, 0);
             //offlineGiftDAO.addItem(giftDTO, 0);
         } catch (Exception e) {
             // No network, use offline mode
             try {
-                offlineGiftDAO.addGift(giftDTO, 0);
+                offlineGiftDAO.addGift(userDTO, giftDTO, 0);
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -108,7 +109,7 @@ public class GiftService implements IGiftService {
 
 
     @Override
-    public int syncToOnlineDB(int userId) {
+    public int syncToOnlineDB(UserDTO userDTO, int userId) {
         // get all items that are not synced from local db
         List<GiftDTO> notSyncedAddedGifts = null;
         List<GiftDTO> notSyncedRemovedGifts = null;
@@ -125,7 +126,7 @@ public class GiftService implements IGiftService {
 
             for (GiftDTO giftDTO : notSyncedAddedGifts) {
                 try {
-                    onlineGiftDAO.addGift(giftDTO, 1); // add not synced item to online db
+                    onlineGiftDAO.addGift(userDTO, giftDTO, 1); // add not synced item to online db
                     offlineGiftDAO.updateGift(giftDTO, 1); // mark item as synced in local db
                 } catch (Exception e) {
                     // No network, can not sync
@@ -154,7 +155,7 @@ public class GiftService implements IGiftService {
     }
 
     @Override
-    public int syncFromOnlineDB(int userId) {
+    public int syncFromOnlineDB(UserDTO userDTO, int userId) {
         if (!isNetworkAvaliable(context)) {
             return -1;
         }
@@ -184,7 +185,7 @@ public class GiftService implements IGiftService {
 
                     // Did not find the item in the local storage, add it
                     if (!foundItem) {
-                        offlineGiftDAO.addGift(onlineItemDto, 1); // mark item as synced in local db
+                        offlineGiftDAO.addGift(userDTO, onlineItemDto, 1); // mark item as synced in local db
                     }
                 } catch (Exception e) {
                     // No network, can not sync

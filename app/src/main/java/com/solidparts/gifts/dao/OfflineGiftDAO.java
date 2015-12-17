@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.solidparts.gifts.dto.GiftDTO;
+import com.solidparts.gifts.dto.UserDTO;
 
 import org.json.JSONException;
 
@@ -105,7 +106,7 @@ public class OfflineGiftDAO extends SQLiteOpenHelper implements IGiftDAO {
     }
 
     @Override
-    public void addGift(GiftDTO itemDTO, int sync) throws IOException, JSONException {
+    public void addGift(UserDTO userDTO, GiftDTO itemDTO, int sync) throws IOException, JSONException {
         ContentValues cv = new ContentValues();
 
         cv.put(ONLINEID, itemDTO.getId());

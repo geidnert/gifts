@@ -300,7 +300,7 @@ public class GiftsActivity extends ActionBarActivity {
         @Override
         protected Boolean doInBackground(GiftDTO... giftDTO) {
             try {
-                giftService.addGift(giftDTO[0]);
+                giftService.addGift(userDTO, giftDTO[0]);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();

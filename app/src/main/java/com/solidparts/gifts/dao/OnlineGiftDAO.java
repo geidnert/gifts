@@ -6,6 +6,7 @@ import android.util.Base64;
 
 import com.solidparts.gifts.dto.DataDTO;
 import com.solidparts.gifts.dto.GiftDTO;
+import com.solidparts.gifts.dto.UserDTO;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -99,13 +100,17 @@ public class OnlineGiftDAO implements IGiftDAO {
     }
 
     @Override
-    public void addGift(GiftDTO giftDTO, int sync) throws IOException, JSONException {
+    public void addGift(UserDTO userDTO, GiftDTO giftDTO, int sync) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        //nameValuePairs.add(new BasicNameValuePair("name", giftDTO.getName()));
+        nameValuePairs.add(new BasicNameValuePair("name", giftDTO.getName()));
         nameValuePairs.add(new BasicNameValuePair("description", URLEncoder.encode(giftDTO.getDescription(), "UTF-8")));
         nameValuePairs.add(new BasicNameValuePair("userId", URLEncoder.encode(""+giftDTO.getUserId(), "UTF-8")));
         nameValuePairs.add(new BasicNameValuePair("url", URLEncoder.encode(giftDTO.getUrl(), "UTF-8")));
         nameValuePairs.add(new BasicNameValuePair("image", Base64.encodeToString(giftDTO.getImage(), Base64.URL_SAFE)));
+
+        nameValuePairs.add(new BasicNameValuePair("firstname", userDTO.getFirstname()));
+        nameValuePairs.add(new BasicNameValuePair("lastname", userDTO.getLastname()));
+        nameValuePairs.add(new BasicNameValuePair("gcm_regid", userDTO.getGcm_regid()));
 
 
         String request = networkDAO.request(NetworkDAO.ADD, nameValuePairs);
@@ -115,7 +120,7 @@ public class OnlineGiftDAO implements IGiftDAO {
 
         // Also save to local database if its not a sync operation
         if (sync == 0) {
-            offlineGiftDAO.addGift(giftDTO, 1);
+            offlineGiftDAO.addGift(userDTO, giftDTO, 1);
         }
 
     }

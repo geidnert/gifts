@@ -55,6 +55,7 @@ public class MainActivity extends ActionBarActivity {
         if(userDTO == null){
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
+            return;
         }
 
         // GCM
