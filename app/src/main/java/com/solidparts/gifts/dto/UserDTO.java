@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class UserDTO implements Serializable {
     private long cacheID;
     int id;
+    String gcm_regid;
     String email;
     String firstname;
     String lastname;
@@ -70,6 +71,22 @@ public class UserDTO implements Serializable {
         this.password = password;
     }
 
+    public String getGcm_regid() {
+        return gcm_regid;
+    }
+
+    public void setGcm_regid(String gcm_regid) {
+        this.gcm_regid = gcm_regid;
+    }
+
+    public String getGroupname() {
+        return groupname;
+    }
+
+    public void setGroupname(String groupname) {
+        this.groupname = groupname;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,6 +108,7 @@ public class UserDTO implements Serializable {
         return "UserDTO{" +
                 "cacheID=" + cacheID +
                 ", id=" + id +
+                ", gcm_regid='" + gcm_regid + '\'' +
                 ", email='" + email + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +

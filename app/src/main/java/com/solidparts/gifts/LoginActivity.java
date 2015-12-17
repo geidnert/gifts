@@ -3,20 +3,26 @@ package com.solidparts.gifts;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,7 +33,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.solidparts.gifts.dto.UserDTO;
+import com.solidparts.gifts.gcm.QuickstartPreferences;
+import com.solidparts.gifts.gcm.RegistrationIntentService;
 import com.solidparts.gifts.service.UserService;
 
 import java.util.ArrayList;
@@ -70,6 +80,14 @@ public class LoginActivity extends ActionBarActivity implements LoaderCallbacks<
         setTitle("Gifts v" + this.getResources().getInteger(R.integer.app_major_version) + "." + this.getResources().getInteger(R.integer.app_minor_version));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Check network status
+        messageManager = new MessageManager();
+        if (!userService.isNetworkAvaliable(this)) {
+            messageManager.show(this, "No network connection available!", true);
+            Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         userService = new UserService(this);
         messageManager = new MessageManager();
