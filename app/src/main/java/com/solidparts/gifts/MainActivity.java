@@ -4,19 +4,30 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.solidparts.gifts.dto.DataDTO;
 import com.solidparts.gifts.dto.UserDTO;
+import com.solidparts.gifts.gcm.QuickstartPreferences;
+import com.solidparts.gifts.gcm.RegistrationIntentService;
 import com.solidparts.gifts.service.GiftService;
 import com.solidparts.gifts.service.UserService;
 
@@ -24,16 +35,46 @@ import com.solidparts.gifts.service.UserService;
 public class MainActivity extends ActionBarActivity {
     public final static String EXTRA_USERDTO = "userDTO";
     public final static String EXTRA_VIEWUSERDTO = "viewUserDTO";
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    private static final String TAG = "MainActivity";
 
     private UserDTO userDTO;
     private UserService userService;
     private MessageManager messageManager;
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTitle("Gifts v" + this.getResources().getInteger(R.integer.app_major_version) + "." + this.getResources().getInteger(R.integer.app_minor_version));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // GCM
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                findViewById(R.id.progressBar).setVisibility(View.GONE);
+
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+                    messageManager.show(getApplicationContext(), "Token retrieved and sent to server! " +
+                            "You can now use gcmsender to send downstream messages to this app", false);
+                } else {
+                    messageManager.show(getApplicationContext(), "An error occurred while either " +
+                            "fetching the InstanceID token, sending the fetched token to the server " +
+                            "or subscribing to the PubSub topic. Please try running the sample again.", false);
+                }
+            }
+        };
+
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
 
         // Check network status
         messageManager = new MessageManager();
@@ -45,6 +86,11 @@ public class MainActivity extends ActionBarActivity {
 
         userDTO = (UserDTO) getIntent().getSerializableExtra("userDTO");
 
+        if(userDTO == null){
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         userService = new UserService(this);
 
         ((TextView) findViewById(R.id.msg)).setText("Welcome " + userDTO.getFirstname() + "!");
@@ -55,6 +101,19 @@ public class MainActivity extends ActionBarActivity {
         appSyncTask.execute(appArgs);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(QuickstartPreferences.REGISTRATION_COMPLETE));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 
     @Override
@@ -193,5 +252,26 @@ public class MainActivity extends ActionBarActivity {
             // Create the AlertDialog object and return it
             return builder.create();
         }
+    }
+
+    /**
+     * Check the device to make sure it has the Google Play Services APK. If
+     * it doesn't, display a dialog that allows users to download the APK from
+     * the Google Play Store or enable it in the device's system settings.
+     */
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 }
