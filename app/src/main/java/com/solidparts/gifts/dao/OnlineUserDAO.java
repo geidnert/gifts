@@ -161,7 +161,9 @@ public class OnlineUserDAO implements IUserDAO {
     @Override
     public void updateUser(UserDTO userDTO, int sync) throws IOException, JSONException {
         ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("id", ""+userDTO.getId()));
         nameValuePairs.add(new BasicNameValuePair("email", userDTO.getEmail()));
+        nameValuePairs.add(new BasicNameValuePair("email", userDTO.getPassword()));
         nameValuePairs.add(new BasicNameValuePair("firstname", userDTO.getFirstname()));
         nameValuePairs.add(new BasicNameValuePair("lastname", userDTO.getLastname() + ""));
         nameValuePairs.add(new BasicNameValuePair("groupname", userDTO.getGroupName()));
