@@ -69,12 +69,12 @@ public class MainActivity extends ActionBarActivity {
                 boolean sentToken = sharedPreferences
                         .getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
-                    messageManager.show(getApplicationContext(), "Token retrieved and sent to server! " +
-                            "You can now use gcmsender to send downstream messages to this app", false);
+                    //messageManager.show(getApplicationContext(), "Token retrieved and sent to server! " +
+                    //        "You can now use gcmsender to send downstream messages to this app", false);
                 } else {
-                    messageManager.show(getApplicationContext(), "An error occurred while either " +
-                            "fetching the InstanceID token, sending the fetched token to the server " +
-                            "or subscribing to the PubSub topic. Please try running the sample again.", false);
+                    //messageManager.show(getApplicationContext(), "An error occurred while either " +
+                    //        "fetching the InstanceID token, sending the fetched token to the server " +
+                    //        "or subscribing to the PubSub topic. Please try running the sample again.", false);
                 }
             }
         };

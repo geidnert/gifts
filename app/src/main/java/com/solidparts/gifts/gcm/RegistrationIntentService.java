@@ -72,12 +72,11 @@ public class RegistrationIntentService extends IntentService {
             Log.i(TAG, "GCM Registration Token: " + token);
 
             // TODO: Implement this method to send any registration to your app's servers.
-            sendRegistrationToServer(token);
-
-            // Subscribe to topic channels
             if(userDTO.getGcm_regid() == null || userDTO.getGcm_regid().equals("")) {
-                subscribeTopics(token);
+                sendRegistrationToServer(token);
             }
+            // Subscribe to topic channels
+            subscribeTopics(token);
 
             // You should store a boolean that indicates whether the generated token has been
             // sent to your server. If the boolean is false, send the token to your server,

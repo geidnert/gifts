@@ -110,7 +110,7 @@ public class OnlineGiftDAO implements IGiftDAO {
 
         nameValuePairs.add(new BasicNameValuePair("firstname", userDTO.getFirstname()));
         nameValuePairs.add(new BasicNameValuePair("lastname", userDTO.getLastname()));
-        nameValuePairs.add(new BasicNameValuePair("gcm_regid", userDTO.getGcm_regid()));
+        nameValuePairs.add(new BasicNameValuePair("group", userDTO.getGroupName()));
 
 
         String request = networkDAO.request(NetworkDAO.ADD, nameValuePairs);
